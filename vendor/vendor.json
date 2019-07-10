@@ -1,6 +1,33 @@
 {
 	"comment": "",
 	"ignore": "test",
-	"package": [],
-	"rootPath": "github.com/buddingleader/gaea-core"
+	"package": [
+		{
+			"checksumSHA1": "dvabztWVQX8f6oMLRyv4dLH+TGY=",
+			"origin": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "d84e815d441de9c64a3a2f9336c32acf1e7349d1",
+			"revisionTime": "2019-01-31T00:33:30Z"
+		},
+		{
+			"checksumSHA1": "s5tdcjh84+tiKS3oSq77mzjB970=",
+			"path": "github.com/google/uuid",
+			"revision": "c2e93f3ae59f2904160ceaab466009f965df46d6",
+			"revisionTime": "2019-04-16T17:24:45Z"
+		},
+		{
+			"checksumSHA1": "LuFv4/jlrmFNnDb/5SCSEPAM9vU=",
+			"origin": "github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib",
+			"path": "github.com/pmezard/go-difflib/difflib",
+			"revision": "d84e815d441de9c64a3a2f9336c32acf1e7349d1",
+			"revisionTime": "2019-01-31T00:33:30Z"
+		},
+		{
+			"checksumSHA1": "d2c1LNsKWhNv3MqHr85G1yycQHc=",
+			"path": "github.com/stretchr/testify/assert",
+			"revision": "d84e815d441de9c64a3a2f9336c32acf1e7349d1",
+			"revisionTime": "2019-01-31T00:33:30Z"
+		}
+	],
+	"rootPath": "github.com/gaeanetwork/gaea-core"
 }
