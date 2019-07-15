@@ -1,10 +1,13 @@
 package docker
 
 import (
+	"crypto/rand"
+	"crypto/sha256"
 	"io/ioutil"
 	"os"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/common"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -38,4 +41,36 @@ func Test_Upload(t *testing.T) {
 	os.Remove("0")
 	os.Remove("1")
 	os.Remove("2")
+}
+
+func Test_Verify(t *testing.T) {
+	c := New()
+	err := c.Create()
+	defer c.Destroy()
+	assert.NoError(t, err)
+
+	algorithmBytes := make([]byte, 32)
+	rand.Read(algorithmBytes)
+	hash := sha256.Sum256(algorithmBytes)
+	algorithmHash := common.BytesToHex(hash[:])
+
+	dataList, dataHashes := make([][]byte, 10), make([]string, 10)
+	for index := 0; index < len(dataList); index++ {
+		dataBytes := make([]byte, 32)
+		rand.Read(dataBytes)
+		hash = sha256.Sum256(dataBytes)
+		dataList[index] = dataBytes
+		dataHashes[index] = common.BytesToHex(hash[:])
+	}
+
+	err1 := c.Upload(algorithmBytes, dataList)
+	assert.NoError(t, err1)
+	err2 := c.Verify(algorithmHash, dataHashes)
+	assert.NoError(t, err2)
+
+	// again
+	err3 := c.Upload(algorithmBytes, dataList)
+	assert.NoError(t, err3)
+	err4 := c.Verify(algorithmHash, dataHashes)
+	assert.NoError(t, err4)
 }
