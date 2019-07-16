@@ -18,4 +18,12 @@ func TestParse(t *testing.T) {
 	if chain != Ethereum {
 		t.Errorf("find error chain %s\n", chain)
 	}
+
+	chain, err = Resolve("0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359")
+	if err != nil {
+		t.Errorf("not find %s\n", err)
+	}
+	if chain != Ethereum {
+		t.Errorf("find error chain %s\n", chain)
+	}
 }
