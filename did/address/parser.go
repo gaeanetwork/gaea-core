@@ -1,6 +1,8 @@
 package address
 
-import "errors"
+import (
+	"errors"
+)
 
 // Parser resolves blockchian
 type Parser struct {
