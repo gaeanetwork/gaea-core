@@ -1,2 +1,2 @@
-# dev
-GAEA Network Dev
+# GAEA
+GAEA Network
