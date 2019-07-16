@@ -14,6 +14,7 @@ var defaultParser Parser
 func init() {
 	defaultParser = Parser{drivers: make(map[string]Driver)}
 	defaultParser.drivers[Bitcoin] = btcDriver{name: Bitcoin}
+	defaultParser.drivers[Ethereum] = ethereumDriver{name: Ethereum}
 }
 
 func (p *Parser) resolve(address string) (string, error) {
