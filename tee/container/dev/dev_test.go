@@ -1,4 +1,4 @@
-package docker
+package dev
 
 import (
 	"crypto/rand"

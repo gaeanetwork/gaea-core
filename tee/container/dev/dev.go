@@ -1,4 +1,4 @@
-package docker
+package dev
 
 import (
 	"crypto/sha256"
@@ -13,7 +13,9 @@ import (
 	"github.com/google/uuid"
 )
 
-// Container for dev
+// Container for development, it will create a temporary folder in your environment,
+// calculate it when it's done, it will be destroyed. It is recommended to use a
+// development environment.
 type Container struct {
 	address       string
 	program       string
