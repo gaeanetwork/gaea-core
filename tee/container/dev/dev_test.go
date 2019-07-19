@@ -14,6 +14,7 @@ import (
 func Test_Create(t *testing.T) {
 	c, err := Create()
 	assert.NoError(t, err)
+	defer c.Destroy()
 	assert.NotEmpty(t, c.address)
 
 	_, err = os.Stat(c.address)
