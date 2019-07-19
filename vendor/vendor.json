@@ -84,6 +84,13 @@
 			"revisionTime": "2019-01-31T00:33:30Z"
 		},
 		{
+			"checksumSHA1": "Tx+N13P+lGKgx5LXb2FcNkezzvU=",
+			"origin": "github.com/docker/docker/vendor/github.com/sirupsen/logrus",
+			"path": "github.com/sirupsen/logrus",
+			"revision": "9b2eaa8a5d66b7f50f051b1145bbcf55d47695d3",
+			"revisionTime": "2019-04-13T17:23:35Z"
+		},
+		{
 			"checksumSHA1": "d2c1LNsKWhNv3MqHr85G1yycQHc=",
 			"path": "github.com/stretchr/testify/assert",
 			"revision": "d84e815d441de9c64a3a2f9336c32acf1e7349d1",
