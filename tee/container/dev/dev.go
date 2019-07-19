@@ -24,15 +24,10 @@ type Container struct {
 	dataHash      []string
 }
 
-// New a development container
-func New() *Container {
-	return &Container{args: make([]string, 0)}
-}
-
-// Create for development
-func (c *Container) Create() error {
-	c.address = filepath.Join("/tmp/teetask/container/", uuid.New().String())
-	return os.MkdirAll(c.address, 0755)
+// Create a development container
+func Create() (*Container, error) {
+	address := filepath.Join("/tmp/teetask/container/", uuid.New().String())
+	return &Container{args: make([]string, 0), address: address}, os.MkdirAll(address, 0700)
 }
 
 // Upload for development

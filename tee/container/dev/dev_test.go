@@ -11,20 +11,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_New(t *testing.T) {
-	c := New()
-	assert.NotNil(t, c)
-}
-
 func Test_Create(t *testing.T) {
-	c := New()
-	err := c.Create()
+	c, err := Create()
 	assert.NoError(t, err)
 	assert.NotEmpty(t, c.address)
+
+	_, err = os.Stat(c.address)
+	assert.False(t, os.IsNotExist(err))
 }
 
 func Test_Upload(t *testing.T) {
-	c := New()
+	c, err := Create()
+	assert.NoError(t, err)
+	defer c.Destroy()
+
 	algorithm, err := ioutil.ReadFile("/home/rabbit/teetest/client/resume")
 	assert.NoError(t, err)
 	A, err := ioutil.ReadFile("/home/rabbit/teetest/A/A_resume.txt")
@@ -36,18 +36,12 @@ func Test_Upload(t *testing.T) {
 	dataList := [][]byte{A, B, C}
 	err = c.Upload(algorithm, dataList)
 	assert.NoError(t, err)
-
-	os.Remove("main")
-	os.Remove("0")
-	os.Remove("1")
-	os.Remove("2")
 }
 
 func Test_Verify(t *testing.T) {
-	c := New()
-	err := c.Create()
-	defer c.Destroy()
+	c, err := Create()
 	assert.NoError(t, err)
+	defer c.Destroy()
 
 	algorithmBytes := make([]byte, 32)
 	rand.Read(algorithmBytes)
@@ -76,7 +70,10 @@ func Test_Verify(t *testing.T) {
 }
 
 func Test_Execute(t *testing.T) {
-	c := New()
+	c, err := Create()
+	assert.NoError(t, err)
+	defer c.Destroy()
+
 	algorithm, err := ioutil.ReadFile("/home/rabbit/teetest/client/resume")
 	assert.NoError(t, err)
 	A, err := ioutil.ReadFile("/home/rabbit/teetest/A/A_resume.txt")
@@ -89,12 +86,6 @@ func Test_Execute(t *testing.T) {
 	err = c.Upload(algorithm, dataList)
 	assert.NoError(t, err)
 
-	defer func() {
-		os.Remove("main")
-		os.Remove("0")
-		os.Remove("1")
-		os.Remove("2")
-	}()
 	dir, err := os.Getwd()
 	os.Setenv("PATH", os.Getenv("PATH")+":"+dir)
 	data, err := c.Execute()

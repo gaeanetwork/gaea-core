@@ -1,9 +1,11 @@
 package container
 
+import "crypto"
+
 // Container to do trusted execution
 type Container interface {
-	// Create a container
-	Create() error
+	// Get the container public key
+	GetPublicKey() crypto.PublicKey
 
 	// Upload algorithm and data to container
 	Upload(algorithm []byte, dataList [][]byte) error
