@@ -16,7 +16,7 @@ func (c *EVM) Query(contractID string, arguments []string) (result []byte, err e
 	return nil, nil
 }
 
-// GetPlatform returns fabric
+// GetPlatform returns ethereum
 func (c *EVM) GetPlatform() smartcontract.Platform {
 	return smartcontract.Ethereum
 }
