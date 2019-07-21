@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+/***
+    protoc -I=. --go_out=. notification.proto
+*/
+// option go_package = "github.com/gaeanetwork/gaea-core/protos/tee";
+
+package tee;
+
+import "shareddata.proto";
+
+message Notification {
+  string id = 1;
+  SharedData data = 2;
+  string requester = 3;
+  int64 request_seconds = 4;
+  AuthStatus status = 5;
+  int64 auth_seconds = 6;
+  string refused_reason = 7;
+}
+
+enum AuthStatus {
+  UnAuthorized = 0;
+  Authorized = 1;
+  Refused = 2;
+}
+
+// UnAuthorized AuthStatus = iota
+// 	Authorized
+// 	Refused
+
+// type Notification struct {
+// 	ID                      string      `json:"id"`
+// 	Data                    *SharedData `json:"data"`
+// 	Requester               string      `json:"requester"`
+// 	RequestSecondsTimestamp int64       `json:"request_seconds_timestamp"`
+// 	Status                  AuthStatus  `json:"auth_status"`
+// 	AuthSecondsTimestamp    int64       `json:"auth_seconds_timestamp"`
+// 	RefusedReason           string      `json:"refused_reason"`
+// 	DataInfo                *DataInfo   `json:"data_info"`
+// }
