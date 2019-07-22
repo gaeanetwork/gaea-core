@@ -4,9 +4,11 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcutil"
 	"github.com/ethereum/go-ethereum/common"
+	btccrypto "github.com/ethereum/go-ethereum/crypto"
 )
 
 // Block Chain Names
@@ -33,6 +35,31 @@ func (btc btcDriver) resolve(address string) (string, error) {
 	return Bitcoin, nil
 }
 
+func (btc btcDriver) createAddress() (string, error) {
+	privateKey, err := btcec.NewPrivateKey(btcec.S256())
+	if err != nil {
+		return "", err
+	}
+
+	params := &chaincfg.MainNetParams
+
+	wif, err := btcutil.NewWIF(privateKey, params, true)
+	if err != nil {
+		return "", err
+	}
+
+	if !wif.IsForNet(params) {
+		return "", errors.New("The WIF string is not valid for the `" + Bitcoin + "` network")
+	}
+
+	address, err := btcutil.NewAddressPubKey(wif.PrivKey.PubKey().SerializeCompressed(), params)
+	if err != nil {
+		return "", nil
+	}
+
+	return address.EncodeAddress(), nil
+}
+
 type ethereumDriver struct {
 	name string
 }
@@ -52,4 +79,13 @@ func (eth ethereumDriver) resolve(address string) (string, error) {
 		}
 	}
 	return Ethereum, nil
+}
+
+func (eth ethereumDriver) createAddress() (string, error) {
+	privateKey, err := btccrypto.GenerateKey()
+	if err != nil {
+		return "", err
+	}
+
+	return btccrypto.PubkeyToAddress(privateKey.PublicKey).Hex(), nil
 }
