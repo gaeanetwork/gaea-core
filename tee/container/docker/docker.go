@@ -111,6 +111,24 @@ func (c *Container) Upload(algorithm []byte, dataList [][]byte) error {
 	return nil
 }
 
+// Verify for development
+func (c *Container) Verify(algorithmHash string, dataHash []string) error {
+	if algorithmHash != c.algorithmHash {
+		return fmt.Errorf("Failed to verify the algorithm hash, task: %s, container: %s", algorithmHash, c.algorithmHash)
+	}
+
+	// check data length
+	if taskLength, containerLength := len(dataHash), len(c.dataHash); taskLength != containerLength {
+		return fmt.Errorf("Failed to verify the data hashes, task length: %d, container length: %d", taskLength, containerLength)
+	}
+
+	if str, ok := common.ContainsStringArray(dataHash, c.dataHash); !ok {
+		return fmt.Errorf("Failed to verify the data hash, task: %v doesn't includes container: %s", dataHash, str)
+	}
+
+	return nil
+}
+
 // Destroy for development
 func (c *Container) Destroy() error {
 	return c.client.RemoveContainer(docker.RemoveContainerOptions{ID: c.id})

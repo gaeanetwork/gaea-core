@@ -1,6 +1,7 @@
 package docker
 
 import (
+	"crypto/rand"
 	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
@@ -49,4 +50,36 @@ func Test_Upload(t *testing.T) {
 	hash := sha256.Sum256(algorithm)
 	algorithmHash := common.BytesToHex(hash[:])
 	assert.Equal(t, algorithmHash, c.algorithmHash)
+}
+
+func Test_Verify(t *testing.T) {
+	c, err := Create()
+	assert.NoError(t, err)
+	defer c.Destroy()
+
+	algorithmBytes := make([]byte, 32)
+	rand.Read(algorithmBytes)
+	hash := sha256.Sum256(algorithmBytes)
+	assert.NoError(t, err)
+	algorithmHash := common.BytesToHex(hash[:])
+
+	dataList, dataHashes := make([][]byte, 10), make([]string, 10)
+	for index := 0; index < len(dataList); index++ {
+		dataBytes := make([]byte, 32)
+		rand.Read(dataBytes)
+		hash = sha256.Sum256(dataBytes)
+		dataList[index] = dataBytes
+		dataHashes[index] = common.BytesToHex(hash[:])
+	}
+
+	err1 := c.Upload(algorithmBytes, dataList)
+	assert.NoError(t, err1)
+	err2 := c.Verify(algorithmHash, dataHashes)
+	assert.NoError(t, err2)
+
+	// again
+	err3 := c.Upload(algorithmBytes, dataList)
+	assert.NoError(t, err3)
+	err4 := c.Verify(algorithmHash, dataHashes)
+	assert.NoError(t, err4)
 }
