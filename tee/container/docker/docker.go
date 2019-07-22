@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
+	"crypto"
 	"crypto/sha256"
 	"fmt"
 	"path/filepath"
@@ -56,7 +57,7 @@ func Create() (*Container, error) {
 	}, nil
 }
 
-// Upload for development
+// Upload for docker
 func (c *Container) Upload(algorithm []byte, dataList [][]byte) error {
 	if len(algorithm) == 0 {
 		return fmt.Errorf("algorithm bytes is empty")
@@ -112,7 +113,7 @@ func (c *Container) Upload(algorithm []byte, dataList [][]byte) error {
 	return nil
 }
 
-// Verify for development
+// Verify for docker
 func (c *Container) Verify(algorithmHash string, dataHash []string) error {
 	if algorithmHash != c.algorithmHash {
 		return fmt.Errorf("Failed to verify the algorithm hash, task: %s, container: %s", algorithmHash, c.algorithmHash)
@@ -130,7 +131,7 @@ func (c *Container) Verify(algorithmHash string, dataHash []string) error {
 	return nil
 }
 
-// Execute for development
+// Execute for docker
 func (c *Container) Execute() ([]byte, error) {
 	cmd := fmt.Sprintf("chmod +x %s/* && %s", c.address, c.cmd)
 	container, err := c.startFunc(cmd)
@@ -181,7 +182,12 @@ func (c *Container) Execute() ([]byte, error) {
 	return stdout.Bytes(), nil
 }
 
-// Destroy for development
+// Destroy for docker
 func (c *Container) Destroy() error {
 	return c.client.RemoveContainer(docker.RemoveContainerOptions{ID: c.id})
+}
+
+// GetPublicKey for docker
+func (c *Container) GetPublicKey() crypto.PublicKey {
+	return nil
 }

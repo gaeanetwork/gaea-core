@@ -93,3 +93,10 @@ func Test_Execute(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, data)
 }
+
+func Test_GetPublickey(t *testing.T) {
+	c, err := Create()
+	assert.NoError(t, err)
+	defer c.Destroy()
+	assert.Nil(t, c.GetPublicKey())
+}
