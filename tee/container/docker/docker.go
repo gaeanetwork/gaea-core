@@ -12,6 +12,7 @@ import (
 	docker "github.com/fsouza/go-dockerclient"
 	"github.com/gaeanetwork/gaea-core/common"
 	"github.com/hyperledger/fabric/core/container/util"
+	"github.com/pkg/errors"
 )
 
 // Container for docker is created by the docker container, which constructs a docker
@@ -127,6 +128,57 @@ func (c *Container) Verify(algorithmHash string, dataHash []string) error {
 	}
 
 	return nil
+}
+
+// Execute for development
+func (c *Container) Execute() ([]byte, error) {
+	cmd := fmt.Sprintf("chmod +x %s/* && %s", c.address, c.cmd)
+	container, err := c.startFunc(cmd)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create an ephemeral docker container")
+	}
+	c.id = container.ID
+
+	if err = c.uploadFunc(c.id); err != nil {
+		return nil, errors.Wrapf(err, "failed to upload payload to the ephemeral docker container, containerID: %v", c.id)
+	}
+
+	stdout := bytes.NewBuffer(nil)
+	cw, err := c.client.AttachToContainerNonBlocking(docker.AttachToContainerOptions{
+		Container:    c.id,
+		OutputStream: stdout,
+		ErrorStream:  stdout,
+		Logs:         true,
+		Stdout:       true,
+		Stderr:       true,
+		Stream:       true,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("Error attaching to container: %s", err)
+	}
+
+	if err := c.client.StartContainer(c.id, nil); err != nil {
+		cw.Close()
+		return nil, errors.Wrapf(err, "failed to realize the Cmd specified at container creation, cmd: %v", cmd)
+	}
+
+	retval, err := c.client.WaitContainer(c.id)
+	if err != nil {
+		cw.Close()
+		return nil, fmt.Errorf("Error waiting for container to complete: %s", err)
+	}
+
+	// Wait for stream copying to complete before accessing stdout.
+	cw.Close()
+	if err := cw.Wait(); err != nil {
+		return nil, fmt.Errorf("attach wait failed: %s", err)
+	}
+
+	if retval > 0 {
+		return nil, fmt.Errorf("Error returned from build: %d \"%s\"", retval, stdout.String())
+	}
+
+	return stdout.Bytes(), nil
 }
 
 // Destroy for development

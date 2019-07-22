@@ -83,3 +83,24 @@ func Test_Verify(t *testing.T) {
 	err4 := c.Verify(algorithmHash, dataHashes)
 	assert.NoError(t, err4)
 }
+
+func Test_Execute(t *testing.T) {
+	c, err := Create()
+	assert.NoError(t, err)
+	defer c.Destroy()
+
+	algorithm, err := ioutil.ReadFile("/home/rabbit/teetest/client/resume")
+	assert.NoError(t, err)
+	A, err := ioutil.ReadFile("/home/rabbit/teetest/A/A_resume.txt")
+	assert.NoError(t, err)
+	B, err := ioutil.ReadFile("/home/rabbit/teetest/B/B_resume.txt")
+	assert.NoError(t, err)
+	C, err := ioutil.ReadFile("/home/rabbit/teetest/C/C_resume.txt")
+	assert.NoError(t, err)
+	dataList := [][]byte{A, B, C}
+	err = c.Upload(algorithm, dataList)
+
+	data, err := c.Execute()
+	assert.NoError(t, err)
+	assert.NotEmpty(t, data)
+}
