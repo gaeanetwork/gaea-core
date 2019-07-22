@@ -7,6 +7,7 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcutil"
 	"github.com/ethereum/go-ethereum/common"
+	btccrypto "github.com/ethereum/go-ethereum/crypto"
 )
 
 // Block Chain Names
@@ -52,4 +53,13 @@ func (eth ethereumDriver) resolve(address string) (string, error) {
 		}
 	}
 	return Ethereum, nil
+}
+
+func (eth ethereumDriver) createAddress() (string, error) {
+	privateKey, err := btccrypto.GenerateKey()
+	if err != nil {
+		return "", err
+	}
+
+	return btccrypto.PubkeyToAddress(privateKey.PublicKey).Hex(), nil
 }
