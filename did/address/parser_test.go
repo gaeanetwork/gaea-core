@@ -42,3 +42,19 @@ func TestGenETHAddress(t *testing.T) {
 		t.Errorf("find error chain: %s, %s\n", chain, addr)
 	}
 }
+
+func TestGenBTCAddress(t *testing.T) {
+	d := btcDriver{name: Bitcoin}
+
+	addr, err := d.createAddress()
+	if err != nil {
+		t.Errorf("get error %s\n", err)
+	}
+	chain, err := d.resolve(addr)
+	if err != nil {
+		t.Errorf("resolve error: %s\n", err)
+	}
+	if chain != Bitcoin {
+		t.Errorf("find error chain: %s, %s\n", chain, addr)
+	}
+}
