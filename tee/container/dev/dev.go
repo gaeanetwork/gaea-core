@@ -1,6 +1,7 @@
 package dev
 
 import (
+	"crypto"
 	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
@@ -94,4 +95,9 @@ func (c *Container) Execute() ([]byte, error) {
 // Destroy for development
 func (c *Container) Destroy() error {
 	return os.RemoveAll(c.address)
+}
+
+// GetPublicKey for development
+func (c *Container) GetPublicKey() crypto.PublicKey {
+	return nil
 }
