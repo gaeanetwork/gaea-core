@@ -18,4 +18,4 @@
 #define ENCRYPT_DECRYPT_ERROR            0xEE
 #define DUPLICATE_SESSION                0xEF
 
-#endif
+#endif /*SGX_ERROR_CODES_H_*/
