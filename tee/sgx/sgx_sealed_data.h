@@ -1,5 +1,5 @@
-#ifndef _SEALED_DATA_DEFINES_H_
-#define _SEALED_DATA_DEFINES_H_
+#ifndef _SEALED_DATA_DEFINITION_H_
+#define _SEALED_DATA_DEFINITION_H_
 
 #include "sgx_error.h"
 
@@ -20,4 +20,4 @@
 #define TIME_BASED_PAY_LOAD_SIZE          624
 #define TIME_BASED_LEASE_DURATION_SECOND  3
 
-#endif
+#endif  /* _SEALED_DATA_DEFINITION_H_ */
