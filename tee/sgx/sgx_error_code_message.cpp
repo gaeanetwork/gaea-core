@@ -4,19 +4,20 @@
 
 void print_error_message(sgx_status_t ret)
 {
-    size_t idx = 0;
-    size_t ttl = sizeof sgx_errlist/sizeof sgx_errlist[0];
+    int found = 0;
 
-    for (idx = 0; idx < ttl; idx++) {
+    for (size_t idx = 0; idx < ttl; idx++) {
         if(ret == sgx_errlist[idx].err) {
-            if(NULL != sgx_errlist[idx].hint)
+            if(NULL != sgx_errlist[idx].hint) {
                 printf("Info: %s\n", sgx_errlist[idx].hint);
+            }
             printf("Error: %s\n", sgx_errlist[idx].message);
+            found = 1;
             break;
         }
     }
 
-    if (idx == ttl) {
+    if (!found) {
         printf("Error: Unexpected error occurred.\n");
     }
 }
