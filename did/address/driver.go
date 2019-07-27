@@ -10,7 +10,8 @@ import (
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcutil"
 	"github.com/ethereum/go-ethereum/common"
-	btccrypto "github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 )
 
 // Block Chain Names
@@ -115,10 +116,22 @@ func (eth ethereumDriver) resolve(address string) (string, error) {
 }
 
 func (eth ethereumDriver) createAddress() (string, error) {
-	privateKey, err := btccrypto.GenerateKey()
+	privateKey, err := ethcrypto.GenerateKey()
 	if err != nil {
 		return "", err
 	}
 
-	return btccrypto.PubkeyToAddress(privateKey.PublicKey).Hex(), nil
+	return ethcrypto.PubkeyToAddress(privateKey.PublicKey).Hex(), nil
+}
+
+func (eth ethereumDriver) verifySign(signatureSerialize string, publicKey string) (bool, error) {
+	testmsg := hexutil.MustDecode("0xce0677bb30baa8cf067c88db9811f4333d131bf8bcf12fe7065d211dce971008")
+	pubKey := hexutil.MustDecode(publicKey)
+	sig := hexutil.MustDecode(signatureSerialize)
+	sig = sig[:len(sig)-1]
+	res := ethcrypto.VerifySignature(pubKey, testmsg, sig)
+	if res == true {
+		return true, nil
+	}
+	return false, nil
 }
