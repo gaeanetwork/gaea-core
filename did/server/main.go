@@ -25,6 +25,15 @@ func main() {
 		}
 		json.NewEncoder(w).Encode(doc)
 	})
+
+	r.HandleFunc("/verify", func(w http.ResponseWriter, r *http.Request) {
+		value := map[string]interface{}{}
+		json.NewDecoder(r.Body).Decode(&value)
+		doc := map[string]interface{}{
+			"result": true,
+		}
+		json.NewEncoder(w).Encode(doc)
+	})
 	http.Handle("/", r)
-	http.ListenAndServe(":6000", r)
+	http.ListenAndServe(":8082", r)
 }
