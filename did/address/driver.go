@@ -73,9 +73,7 @@ func (btc btcDriver) verifySign(signatureSerialize string, publicKey string) (bo
 		return false, err
 	}
 
-	sigBytes, err := hex.DecodeString("30450220090ebfb3690a0ff115bb1b38b" +
-		"8b323a667b7653454f1bccb06d4bbdca42c2079022100ec95778b51e707" +
-		"1cb1205f8bde9af6592fc978b0452dafe599481c46d6b2e479")
+	sigBytes, err := hex.DecodeString(signatureSerialize)
 
 	if err != nil {
 		return false, err
