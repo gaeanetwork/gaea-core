@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+/**
+    protoc -I=$GOPATH/src/github.com/gaeanetwork/gaea-core/protos/tee --go_out=plugins=grpc:. --proto_path=$GOPATH/src/github.com/gaeanetwork/gaea-core/protos/tee/shareddata.proto
+    SRC_DIR=$GOPATH/src/github.com/gaeanetwork/gaea-core/protos/tee protoc --go_out=plugins=grpc:. $SRC_DIR/shareddata.proto
+    protoc -I=. --go_out=. shareddata.proto
+*/
+// option go_package = "github.com/gaeanetwork/gaea-core/protos/tee";
+
+package tee;
+
+message SharedData {
+  string id = 1;
+  string ciphertext = 2;
+  string hash = 3;
+  string description = 4;
+  string owner = 5;
+  int64 create_seconds = 6;
+  int64 update_seconds = 7;
+  repeated string signatures = 8;
+}

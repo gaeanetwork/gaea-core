@@ -3,6 +3,13 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "gZQ6HheWahvZzIc3phBnOwoWHjE=",
+			"origin": "github.com/ethereum/go-ethereum/vendor/github.com/btcsuite/btcd/btcec",
+			"path": "github.com/btcsuite/btcd/btcec",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
 			"checksumSHA1": "dvabztWVQX8f6oMLRyv4dLH+TGY=",
 			"origin": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
 			"path": "github.com/davecgh/go-spew/spew",
@@ -10,10 +17,64 @@
 			"revisionTime": "2019-01-31T00:33:30Z"
 		},
 		{
+			"checksumSHA1": "31g2Df8m5bWEOg3UE6YJVQpSlWY=",
+			"path": "github.com/ethereum/go-ethereum/common",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
+			"checksumSHA1": "tvdkin+xdCuyH0IPqxbrHYGL1gc=",
+			"path": "github.com/ethereum/go-ethereum/common/hexutil",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
+			"checksumSHA1": "BP3m/oEeoC9ustdCYzAVS/gabqg=",
+			"path": "github.com/ethereum/go-ethereum/common/math",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
+			"checksumSHA1": "PHB7umOzjEjzoTOd+8hHrR5zyN8=",
+			"path": "github.com/ethereum/go-ethereum/crypto",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
+			"checksumSHA1": "QxQSaGsE5Tb5w/EfkmXU6WF68fo=",
+			"path": "github.com/ethereum/go-ethereum/crypto/bn256/cloudflare",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
+			"checksumSHA1": "Su8qqDZsl8ty3UJJMt/xY9ADa7A=",
+			"path": "github.com/ethereum/go-ethereum/crypto/bn256/google",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
+			"checksumSHA1": "09V3eE1EhOkdfksyjsH+03c5fQg=",
+			"path": "github.com/ethereum/go-ethereum/crypto/secp256k1",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
+			"checksumSHA1": "X3WxB77ML6EjA5p0kZsLg2qR57M=",
+			"path": "github.com/ethereum/go-ethereum/rlp",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
 			"checksumSHA1": "s5tdcjh84+tiKS3oSq77mzjB970=",
 			"path": "github.com/google/uuid",
 			"revision": "c2e93f3ae59f2904160ceaab466009f965df46d6",
 			"revisionTime": "2019-04-16T17:24:45Z"
+		},
+		{
+			"checksumSHA1": "I7hloldMJZTqUx6hbVDp5nk9fZQ=",
+			"path": "github.com/pkg/errors",
+			"revision": "27936f6d90f9c8e1145f11ed52ffffbfdb9e0af7",
+			"revisionTime": "2019-02-27T00:00:51Z"
 		},
 		{
 			"checksumSHA1": "LuFv4/jlrmFNnDb/5SCSEPAM9vU=",
@@ -23,10 +84,36 @@
 			"revisionTime": "2019-01-31T00:33:30Z"
 		},
 		{
+			"checksumSHA1": "Tx+N13P+lGKgx5LXb2FcNkezzvU=",
+			"origin": "github.com/docker/docker/vendor/github.com/sirupsen/logrus",
+			"path": "github.com/sirupsen/logrus",
+			"revision": "9b2eaa8a5d66b7f50f051b1145bbcf55d47695d3",
+			"revisionTime": "2019-04-13T17:23:35Z"
+		},
+		{
 			"checksumSHA1": "d2c1LNsKWhNv3MqHr85G1yycQHc=",
 			"path": "github.com/stretchr/testify/assert",
 			"revision": "d84e815d441de9c64a3a2f9336c32acf1e7349d1",
 			"revisionTime": "2019-01-31T00:33:30Z"
+		},
+		{
+			"checksumSHA1": "eYhTfLio8LIbMxuNtKB0z3XpVB0=",
+			"path": "github.com/stretchr/testify/require",
+			"revision": "d84e815d441de9c64a3a2f9336c32acf1e7349d1",
+			"revisionTime": "2019-01-31T00:33:30Z"
+		},
+		{
+			"checksumSHA1": "hUsBzxJ8KTL4v0vpPT/mqvdJ46s=",
+			"origin": "github.com/ethereum/go-ethereum/vendor/golang.org/x/crypto/sha3",
+			"path": "golang.org/x/crypto/sha3",
+			"revision": "07d2d83c315abae91659a28f75f8c42f6b9eb457",
+			"revisionTime": "2019-05-13T12:50:17Z"
+		},
+		{
+			"checksumSHA1": "NaPKWo2/NhJLk/+GrsBiAL/V6J4=",
+			"path": "golang.org/x/sys/cpu",
+			"revision": "fae7ac547cb717d141c433a2a173315e216b64c4",
+			"revisionTime": "2019-07-11T09:16:12Z"
 		}
 	],
 	"rootPath": "github.com/gaeanetwork/gaea-core"
