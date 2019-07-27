@@ -1,11 +1,13 @@
 package address
 
 import (
+	"encoding/hex"
 	"errors"
 	"regexp"
 
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcutil"
 	"github.com/ethereum/go-ethereum/common"
 	btccrypto "github.com/ethereum/go-ethereum/crypto"
@@ -58,6 +60,39 @@ func (btc btcDriver) createAddress() (string, error) {
 	}
 
 	return address.EncodeAddress(), nil
+}
+
+func (btc btcDriver) verifySign(signatureSerialize string, publicKey string) (bool, error) {
+	pubKeyBytes, err := hex.DecodeString(publicKey)
+	if err != nil {
+		return false, err
+	}
+
+	pubKey, err := btcec.ParsePubKey(pubKeyBytes, btcec.S256())
+	if err != nil {
+		return false, err
+	}
+
+	sigBytes, err := hex.DecodeString("30450220090ebfb3690a0ff115bb1b38b" +
+		"8b323a667b7653454f1bccb06d4bbdca42c2079022100ec95778b51e707" +
+		"1cb1205f8bde9af6592fc978b0452dafe599481c46d6b2e479")
+
+	if err != nil {
+		return false, err
+	}
+
+	signature, err := btcec.ParseSignature(sigBytes, btcec.S256())
+	if err != nil {
+		return false, err
+	}
+
+	message := "test message"
+	messageHash := chainhash.DoubleHashB([]byte(message))
+	verified := signature.Verify(messageHash, pubKey)
+	if verified == true {
+		return true, nil
+	}
+	return false, nil
 }
 
 type ethereumDriver struct {
