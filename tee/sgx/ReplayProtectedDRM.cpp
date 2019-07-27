@@ -128,7 +128,7 @@ uint32_t ReplayProtectedDRM::DeleteSecret(uint8_t* stored_sealed_activity_log)
     sgx_ret = delete_sealed_policy(enclave_id, &enclave_ret, (uint8_t *)stored_sealed_activity_log, sealed_activity_log_length);
     if (sgx_ret)
     {
-        cerr << "call delete_sealed_policy fail, error code = 0x" << hex<< sgx_ret << endl;
+        cerr << "call delete_sealed_policy fail, error code = 0x" << hex << sgx_ret << endl;
         return sgx_ret;
     }
 

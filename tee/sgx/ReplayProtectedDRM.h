@@ -24,7 +24,7 @@ public:
 
     static const uint32_t sealed_activity_log_length = SEALED_REPLAY_PROTECTED_PAY_LOAD_SIZE;
 
-    private:
+private:
     uint8_t  sealed_activity_log[sealed_activity_log_length];
     sgx_enclave_id_t enclave_id;
 };
