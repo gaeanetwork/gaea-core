@@ -66,7 +66,7 @@ func (btc btcDriver) createAddress() (string, string, error) {
 		return "", "", nil
 	}
 
-	return hex.EncodeToString(wif.PrivKey.Serialize()), address.EncodeAddress(), nil
+	return wif.String(), address.EncodeAddress(), nil
 }
 
 func (btc btcDriver) verifySign(signatureSerialize string, publicKey string) (bool, error) {

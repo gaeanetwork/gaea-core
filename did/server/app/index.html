@@ -1,0 +1,18 @@
+<html>
+<body>
+	<script type="text/javascript" src='http://localhost:8091/bitcoinjs.min.js'></script>
+	<script type="text/javascript" src='http://localhost:8091/bitcoin_message.min.js'></script>
+	<button type="button" id="sign-in">Sign in with DID!</button>
+	<button type="button" id="sign-out" style="display:none">Sign Out</button>
+	<pre id='display'></pre>
+	<script type="text/javascript">
+		keyPair = Bitcoin.ECPair.fromWIF('KySe4JgsBiSLJ4tHX1ojcC1eXzBwJUQqaJ974og7yaX58b2m4pnt');
+		var privateKey = keyPair.privateKey;
+		var message = 'This is an example of a signed message.';
+		var signature = bitcoin_message.sign(message, privateKey, keyPair.compressed);
+		(function() {
+			console.log(signature.toString('base64'));
+		})();
+	</script>
+</body>
+</html>
