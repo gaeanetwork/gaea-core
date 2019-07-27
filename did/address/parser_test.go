@@ -30,7 +30,7 @@ func TestParse(t *testing.T) {
 
 func TestGenETHAddress(t *testing.T) {
 	d := ethereumDriver{name: Ethereum}
-	addr, err := d.createAddress()
+	_, addr, err := d.createAddress()
 	if err != nil {
 		t.Errorf("get error %s\n", err)
 	}
@@ -46,7 +46,7 @@ func TestGenETHAddress(t *testing.T) {
 func TestGenBTCAddress(t *testing.T) {
 	d := btcDriver{name: Bitcoin}
 
-	addr, err := d.createAddress()
+	_, addr, err := d.createAddress()
 	if err != nil {
 		t.Errorf("get error %s\n", err)
 	}

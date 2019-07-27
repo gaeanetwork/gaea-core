@@ -33,16 +33,16 @@ func Resolve(address string) (string, error) {
 	return defaultParser.resolve(address)
 }
 
-func (p *Parser) register(netName string) (string, error) {
+func (p *Parser) register(netName string) (string, string, error) {
 	d, ok := p.drivers[netName]
 	if !ok {
-		return "", fmt.Errorf("Not support (%s)", netName)
+		return "", "", fmt.Errorf("Not support (%s)", netName)
 	}
 
 	return d.createAddress()
 }
 
 // Register to a special net
-func Register(netName string) (string, error) {
+func Register(netName string) (string, string, error) {
 	return defaultParser.register(netName)
 }

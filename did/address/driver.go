@@ -24,7 +24,7 @@ const (
 // Driver interface
 type Driver interface {
 	resolve(address string) (string, error)
-	createAddress() (string, error)
+	createAddress() (string, string, error)
 }
 
 type btcDriver struct {
@@ -44,29 +44,29 @@ func (btc btcDriver) resolve(address string) (string, error) {
 	return Bitcoin, nil
 }
 
-func (btc btcDriver) createAddress() (string, error) {
+func (btc btcDriver) createAddress() (string, string, error) {
 	privateKey, err := btcec.NewPrivateKey(btcec.S256())
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	params := &chaincfg.MainNetParams
 
 	wif, err := btcutil.NewWIF(privateKey, params, true)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	if !wif.IsForNet(params) {
-		return "", errors.New("The WIF string is not valid for the `" + Bitcoin + "` network")
+		return "", "", errors.New("The WIF string is not valid for the `" + Bitcoin + "` network")
 	}
 
 	address, err := btcutil.NewAddressPubKey(wif.PrivKey.PubKey().SerializeCompressed(), params)
 	if err != nil {
-		return "", nil
+		return "", "", nil
 	}
 
-	return address.EncodeAddress(), nil
+	return hex.EncodeToString(wif.PrivKey.Serialize()), address.EncodeAddress(), nil
 }
 
 func (btc btcDriver) verifySign(signatureSerialize string, publicKey string) (bool, error) {
@@ -126,13 +126,13 @@ func (eth ethereumDriver) resolve(address string) (string, error) {
 	return Ethereum, nil
 }
 
-func (eth ethereumDriver) createAddress() (string, error) {
+func (eth ethereumDriver) createAddress() (string, string, error) {
 	privateKey, err := ethcrypto.GenerateKey()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return ethcrypto.PubkeyToAddress(privateKey.PublicKey).Hex(), nil
+	return hex.EncodeToString(ethcrypto.FromECDSA(privateKey)), ethcrypto.PubkeyToAddress(privateKey.PublicKey).Hex(), nil
 }
 
 func (eth ethereumDriver) verifySign(signatureSerialize string, publicKey string) (bool, error) {

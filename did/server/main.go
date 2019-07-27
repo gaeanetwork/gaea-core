@@ -14,13 +14,14 @@ func main() {
 	r.HandleFunc("/register/{net}/{name}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		netName := vars["net"]
-		addr, err := address.Register(netName)
+		privKey, addr, err := address.Register(netName)
 		if err != nil {
 			log.Println(err)
 		}
 		doc := map[string]interface{}{
-			"name": vars["name"],
-			"id":   addr,
+			"name":    vars["name"],
+			"id":      addr,
+			"privkey": privKey,
 		}
 		json.NewEncoder(w).Encode(doc)
 	})
