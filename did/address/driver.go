@@ -24,10 +24,16 @@ const (
 // Driver interface
 type Driver interface {
 	resolve(address string) (string, error)
+	createAddress() (string, error)
 }
 
 type btcDriver struct {
 	name string
+}
+
+// NewBTCDriver create a btcDriver
+func NewBTCDriver() Driver {
+	return btcDriver{name: Bitcoin}
 }
 
 func (btc btcDriver) resolve(address string) (string, error) {
@@ -96,6 +102,11 @@ func (btc btcDriver) verifySign(signatureSerialize string, publicKey string) (bo
 
 type ethereumDriver struct {
 	name string
+}
+
+// NewETHDriver create a ethereum driver
+func NewETHDriver() Driver {
+	return ethereumDriver{name: Ethereum}
 }
 
 func (eth ethereumDriver) resolve(address string) (string, error) {
