@@ -1,0 +1,23 @@
+<html>
+<body>
+	<script type="text/javascript" src='/js/bitcoinjs.min.js'></script>
+	<script type="text/javascript" src='/js/bitcoin_message.min.js'></script>
+	<button type="button" id="sign-in">Sign in with DID!</button>
+	<button type="button" id="sign-out" style="display:none">Sign Out</button>
+	<pre id='display'></pre>
+	<script type="text/javascript">
+		keyPair = Bitcoin.ECPair.fromWIF('KySe4JgsBiSLJ4tHX1ojcC1eXzBwJUQqaJ974og7yaX58b2m4pnt');
+		var privateKey = keyPair.privateKey;
+		var message = 'This is an example of a signed message.';
+		var signature = bitcoin_message.sign(message, privateKey, keyPair.compressed);
+		(function() {
+			var sign = signature.toString('base64');
+			console.log(sign);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", 'http://localhost:8081/verify', true);
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(JSON.stringify({sign: sign}));
+		})();
+	</script>
+</body>
+</html>
