@@ -22,6 +22,7 @@ void ecall_malloc_free(void)
 void ecall_sgx_cpuid(int cpuinfo[4], int leaf)
 {
     sgx_status_t ret = sgx_cpuid(cpuinfo, leaf);
-    if (ret != SGX_SUCCESS)
+    if (ret != SGX_SUCCESS) {
         abort();
+    }
 }
