@@ -132,6 +132,12 @@
 			"revisionTime": "2019-04-16T17:24:45Z"
 		},
 		{
+			"checksumSHA1": "942Y5peBcviGXJHOTpwH+14ir2c=",
+			"path": "github.com/gorilla/mux",
+			"revision": "e67b3c02c7195c052acff13261f0c9fd1ba53011",
+			"revisionTime": "2019-07-20T20:14:35Z"
+		},
+		{
 			"checksumSHA1": "p3ADN0dt+/aCILFu57oVRl2xYlE=",
 			"path": "github.com/hyperledger/fabric/common/flogging",
 			"revision": "30bc92b66424592674caa8cff4f5f02e2cb04ea0",
