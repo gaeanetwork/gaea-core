@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+/**
+    protoc -I=. --go_out=plugins=grpc:. transmission.proto
+*/
+// option go_package = "github.com/gaeanetwork/gaea-core/protos/service";
+
+package service;
+
+service Transmission {
+    rpc UploadFile (stream UploadFileRequest) returns (UploadFileResponse);
+    rpc DownloadFile (DownloadFileRequest) returns (stream DownloadFileResponse);
+}
+
+message UploadFileRequest {
+    bytes data = 1;
+}
+
+message UploadFileResponse {
+    string file_id = 1;
+}
+
+message DownloadFileRequest {
+    repeated string file_id = 1;
+}
+
+message DownloadFileResponse {
+    bytes data = 1;
+}

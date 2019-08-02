@@ -50,6 +50,42 @@
 			"revisionTime": "2019-05-13T12:50:17Z"
 		},
 		{
+			"checksumSHA1": "/DeuRNTl9zO2HSIA37IqGeyqEXM=",
+			"path": "github.com/btcsuite/btcd/chaincfg",
+			"revision": "c26ffa870fd817666a857af1bf6498fabba1ffe3",
+			"revisionTime": "2019-06-29T00:36:39Z"
+		},
+		{
+			"checksumSHA1": "hI5NhyOyOaazvlK8vWFFsPVEPiM=",
+			"path": "github.com/btcsuite/btcd/chaincfg/chainhash",
+			"revision": "c26ffa870fd817666a857af1bf6498fabba1ffe3",
+			"revisionTime": "2019-06-29T00:36:39Z"
+		},
+		{
+			"checksumSHA1": "ruKchP41kPZFFUS940weplW73I8=",
+			"path": "github.com/btcsuite/btcd/wire",
+			"revision": "c26ffa870fd817666a857af1bf6498fabba1ffe3",
+			"revisionTime": "2019-06-29T00:36:39Z"
+		},
+		{
+			"checksumSHA1": "gZHfOHB+zlaNWUjdlu1nFD7VBX0=",
+			"path": "github.com/btcsuite/btcutil",
+			"revision": "9e5f4b9a998d263e3ce9c56664a7816001ac8000",
+			"revisionTime": "2019-04-25T00:47:09Z"
+		},
+		{
+			"checksumSHA1": "oQgLy8KmIOVov04WXH7KgU1bszc=",
+			"path": "github.com/btcsuite/btcutil/base58",
+			"revision": "9e5f4b9a998d263e3ce9c56664a7816001ac8000",
+			"revisionTime": "2019-04-25T00:47:09Z"
+		},
+		{
+			"checksumSHA1": "BBnsAiKyNfocRwmEav5EJpVCwzk=",
+			"path": "github.com/btcsuite/btcutil/bech32",
+			"revision": "9e5f4b9a998d263e3ce9c56664a7816001ac8000",
+			"revisionTime": "2019-04-25T00:47:09Z"
+		},
+		{
 			"checksumSHA1": "dvabztWVQX8f6oMLRyv4dLH+TGY=",
 			"origin": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
 			"path": "github.com/davecgh/go-spew/spew",
@@ -130,6 +166,12 @@
 			"path": "github.com/google/uuid",
 			"revision": "c2e93f3ae59f2904160ceaab466009f965df46d6",
 			"revisionTime": "2019-04-16T17:24:45Z"
+		},
+		{
+			"checksumSHA1": "942Y5peBcviGXJHOTpwH+14ir2c=",
+			"path": "github.com/gorilla/mux",
+			"revision": "e67b3c02c7195c052acff13261f0c9fd1ba53011",
+			"revisionTime": "2019-07-20T20:14:35Z"
 		},
 		{
 			"checksumSHA1": "p3ADN0dt+/aCILFu57oVRl2xYlE=",
@@ -337,6 +379,12 @@
 			"path": "go.uber.org/zap/zapgrpc",
 			"revision": "30bc92b66424592674caa8cff4f5f02e2cb04ea0",
 			"revisionTime": "2019-07-31T09:52:30Z"
+		},
+		{
+			"checksumSHA1": "UAbH5s3v5AfEvbGMEQAyzSFCMU0=",
+			"path": "golang.org/x/crypto/ripemd160",
+			"revision": "4def268fd1a49955bfb3dda92fe3db4f924f2285",
+			"revisionTime": "2019-07-01T08:59:26Z"
 		},
 		{
 			"checksumSHA1": "hUsBzxJ8KTL4v0vpPT/mqvdJ46s=",
