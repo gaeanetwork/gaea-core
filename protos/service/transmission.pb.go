@@ -103,7 +103,7 @@ func (m *UploadFileResponse) GetFileId() string {
 }
 
 type DownloadFileRequest struct {
-	FileId               []string `protobuf:"bytes,1,rep,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
+	FileId               string   `protobuf:"bytes,1,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -134,11 +134,11 @@ func (m *DownloadFileRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_DownloadFileRequest proto.InternalMessageInfo
 
-func (m *DownloadFileRequest) GetFileId() []string {
+func (m *DownloadFileRequest) GetFileId() string {
 	if m != nil {
 		return m.FileId
 	}
-	return nil
+	return ""
 }
 
 type DownloadFileResponse struct {
@@ -190,7 +190,7 @@ func init() {
 func init() { proto.RegisterFile("transmission.proto", fileDescriptor_5e45df04459fa574) }
 
 var fileDescriptor_5e45df04459fa574 = []byte{
-	// 206 bytes of a gzipped FileDescriptorProto
+	// 198 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2a, 0x29, 0x4a, 0xcc,
 	0x2b, 0xce, 0xcd, 0x2c, 0x2e, 0xce, 0xcc, 0xcf, 0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62,
 	0x2f, 0x4e, 0x2d, 0x2a, 0xcb, 0x4c, 0x4e, 0x55, 0x52, 0xe7, 0x12, 0x0c, 0x2d, 0xc8, 0xc9, 0x4f,
@@ -198,12 +198,12 @@ var fileDescriptor_5e45df04459fa574 = []byte{
 	0x49, 0x49, 0x2c, 0x49, 0x94, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x09, 0x02, 0xb3, 0x95, 0x74, 0xb9,
 	0x84, 0x90, 0x15, 0x16, 0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x0a, 0x89, 0x73, 0xb1, 0xa7, 0x65, 0xe6,
 	0xa4, 0xc6, 0x67, 0xa6, 0x80, 0x15, 0x73, 0x06, 0xb1, 0x81, 0xb8, 0x9e, 0x29, 0x4a, 0x7a, 0x5c,
-	0xc2, 0x2e, 0xf9, 0xe5, 0x79, 0xe8, 0x26, 0xa3, 0xa8, 0x67, 0x46, 0x52, 0xaf, 0xc5, 0x25, 0x82,
-	0xaa, 0x1e, 0x6a, 0x01, 0x16, 0xa7, 0x18, 0x2d, 0x63, 0xe4, 0xe2, 0x09, 0x41, 0xf2, 0x93, 0x90,
-	0x3b, 0x17, 0x17, 0xc2, 0x6d, 0x42, 0x52, 0x7a, 0x50, 0xcf, 0xe9, 0x61, 0xf8, 0x4c, 0x4a, 0x1a,
-	0xab, 0x1c, 0xc4, 0x2e, 0x0d, 0x46, 0x21, 0x5f, 0x2e, 0x1e, 0x64, 0x57, 0x08, 0xc9, 0xc0, 0x95,
-	0x63, 0xf1, 0x8c, 0x94, 0x2c, 0x0e, 0x59, 0x88, 0x71, 0x06, 0x8c, 0x49, 0x6c, 0xe0, 0xc0, 0x36,
-	0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x2d, 0xd2, 0x64, 0x2f, 0x82, 0x01, 0x00, 0x00,
+	0xc2, 0x2e, 0xf9, 0xe5, 0x79, 0xe8, 0x26, 0xe3, 0x54, 0xaf, 0xc5, 0x25, 0x82, 0xaa, 0x1e, 0x6a,
+	0x01, 0x16, 0xa7, 0x18, 0x2d, 0x62, 0xe4, 0xe2, 0x09, 0x41, 0xf2, 0x93, 0x90, 0x2b, 0x17, 0x17,
+	0xc2, 0x6d, 0x42, 0x52, 0x7a, 0x50, 0xcf, 0xe9, 0x61, 0xf8, 0x4c, 0x4a, 0x1a, 0xab, 0x1c, 0xd4,
+	0x2e, 0x6f, 0x2e, 0x1e, 0x64, 0x37, 0x08, 0xc9, 0xc0, 0x15, 0x63, 0xf1, 0x8a, 0x94, 0x2c, 0x0e,
+	0x59, 0x88, 0x61, 0x49, 0x6c, 0xe0, 0x80, 0x36, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x1b, 0x33,
+	0x5b, 0x19, 0x7e, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -218,8 +218,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type TransmissionClient interface {
-	UploadFile(ctx context.Context, opts ...grpc.CallOption) (Transmission_UploadFileClient, error)
-	DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (Transmission_DownloadFileClient, error)
+	UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error)
+	DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (*DownloadFileResponse, error)
 }
 
 type transmissionClient struct {
@@ -230,155 +230,94 @@ func NewTransmissionClient(cc *grpc.ClientConn) TransmissionClient {
 	return &transmissionClient{cc}
 }
 
-func (c *transmissionClient) UploadFile(ctx context.Context, opts ...grpc.CallOption) (Transmission_UploadFileClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_Transmission_serviceDesc.Streams[0], "/service.Transmission/UploadFile", opts...)
+func (c *transmissionClient) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error) {
+	out := new(UploadFileResponse)
+	err := c.cc.Invoke(ctx, "/service.Transmission/UploadFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &transmissionUploadFileClient{stream}
-	return x, nil
+	return out, nil
 }
 
-type Transmission_UploadFileClient interface {
-	Send(*UploadFileRequest) error
-	CloseAndRecv() (*UploadFileResponse, error)
-	grpc.ClientStream
-}
-
-type transmissionUploadFileClient struct {
-	grpc.ClientStream
-}
-
-func (x *transmissionUploadFileClient) Send(m *UploadFileRequest) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *transmissionUploadFileClient) CloseAndRecv() (*UploadFileResponse, error) {
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	m := new(UploadFileResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func (c *transmissionClient) DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (Transmission_DownloadFileClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_Transmission_serviceDesc.Streams[1], "/service.Transmission/DownloadFile", opts...)
+func (c *transmissionClient) DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (*DownloadFileResponse, error) {
+	out := new(DownloadFileResponse)
+	err := c.cc.Invoke(ctx, "/service.Transmission/DownloadFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &transmissionDownloadFileClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type Transmission_DownloadFileClient interface {
-	Recv() (*DownloadFileResponse, error)
-	grpc.ClientStream
-}
-
-type transmissionDownloadFileClient struct {
-	grpc.ClientStream
-}
-
-func (x *transmissionDownloadFileClient) Recv() (*DownloadFileResponse, error) {
-	m := new(DownloadFileResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 // TransmissionServer is the server API for Transmission service.
 type TransmissionServer interface {
-	UploadFile(Transmission_UploadFileServer) error
-	DownloadFile(*DownloadFileRequest, Transmission_DownloadFileServer) error
+	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
+	DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileResponse, error)
 }
 
 // UnimplementedTransmissionServer can be embedded to have forward compatible implementations.
 type UnimplementedTransmissionServer struct {
 }
 
-func (*UnimplementedTransmissionServer) UploadFile(srv Transmission_UploadFileServer) error {
-	return status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
+func (*UnimplementedTransmissionServer) UploadFile(ctx context.Context, req *UploadFileRequest) (*UploadFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
 }
-func (*UnimplementedTransmissionServer) DownloadFile(req *DownloadFileRequest, srv Transmission_DownloadFileServer) error {
-	return status.Errorf(codes.Unimplemented, "method DownloadFile not implemented")
+func (*UnimplementedTransmissionServer) DownloadFile(ctx context.Context, req *DownloadFileRequest) (*DownloadFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DownloadFile not implemented")
 }
 
 func RegisterTransmissionServer(s *grpc.Server, srv TransmissionServer) {
 	s.RegisterService(&_Transmission_serviceDesc, srv)
 }
 
-func _Transmission_UploadFile_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(TransmissionServer).UploadFile(&transmissionUploadFileServer{stream})
-}
-
-type Transmission_UploadFileServer interface {
-	SendAndClose(*UploadFileResponse) error
-	Recv() (*UploadFileRequest, error)
-	grpc.ServerStream
-}
-
-type transmissionUploadFileServer struct {
-	grpc.ServerStream
-}
-
-func (x *transmissionUploadFileServer) SendAndClose(m *UploadFileResponse) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func (x *transmissionUploadFileServer) Recv() (*UploadFileRequest, error) {
-	m := new(UploadFileRequest)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
+func _Transmission_UploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadFileRequest)
+	if err := dec(in); err != nil {
 		return nil, err
 	}
-	return m, nil
-}
-
-func _Transmission_DownloadFile_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(DownloadFileRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+	if interceptor == nil {
+		return srv.(TransmissionServer).UploadFile(ctx, in)
 	}
-	return srv.(TransmissionServer).DownloadFile(m, &transmissionDownloadFileServer{stream})
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.Transmission/UploadFile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransmissionServer).UploadFile(ctx, req.(*UploadFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-type Transmission_DownloadFileServer interface {
-	Send(*DownloadFileResponse) error
-	grpc.ServerStream
-}
-
-type transmissionDownloadFileServer struct {
-	grpc.ServerStream
-}
-
-func (x *transmissionDownloadFileServer) Send(m *DownloadFileResponse) error {
-	return x.ServerStream.SendMsg(m)
+func _Transmission_DownloadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DownloadFileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransmissionServer).DownloadFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.Transmission/DownloadFile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransmissionServer).DownloadFile(ctx, req.(*DownloadFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 var _Transmission_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "service.Transmission",
 	HandlerType: (*TransmissionServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams: []grpc.StreamDesc{
+	Methods: []grpc.MethodDesc{
 		{
-			StreamName:    "UploadFile",
-			Handler:       _Transmission_UploadFile_Handler,
-			ClientStreams: true,
+			MethodName: "UploadFile",
+			Handler:    _Transmission_UploadFile_Handler,
 		},
 		{
-			StreamName:    "DownloadFile",
-			Handler:       _Transmission_DownloadFile_Handler,
-			ServerStreams: true,
+			MethodName: "DownloadFile",
+			Handler:    _Transmission_DownloadFile_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "transmission.proto",
 }
