@@ -267,6 +267,12 @@
 			"revisionTime": "2019-07-02T01:03:15Z"
 		},
 		{
+			"checksumSHA1": "74gCzvJiE6bXX3i4vIVCYhffDHc=",
+			"path": "github.com/mattn/go-isatty",
+			"revision": "da60ac76bf7019a8b005f8dd1ad9d1a0e6434155",
+			"revisionTime": "2019-07-08T05:43:38Z"
+		},
+		{
 			"checksumSHA1": "0LUR7fSzTjFiqyyIPWppk84aos8=",
 			"origin": "github.com/hyperledger/fabric/vendor/github.com/mitchellh/mapstructure",
 			"path": "github.com/mitchellh/mapstructure",
@@ -346,6 +352,12 @@
 			"path": "github.com/sykesm/zap-logfmt",
 			"revision": "30bc92b66424592674caa8cff4f5f02e2cb04ea0",
 			"revisionTime": "2019-07-31T09:52:30Z"
+		},
+		{
+			"checksumSHA1": "mW4m+GkVSVHGn+Vj+jmVj4NwMDo=",
+			"path": "github.com/ugorji/go/codec",
+			"revision": "e118e2d506a6b252f6b85f2e2f2ac1bfed82f1b8",
+			"revisionTime": "2019-07-23T09:17:30Z"
 		},
 		{
 			"checksumSHA1": "4JeqOqxJwpFPYXjYy6PCfUb+Flg=",
