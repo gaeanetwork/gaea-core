@@ -1,6 +1,6 @@
 // Go support for Protocol Buffers - Google's data interchange format
 //
-// Copyright 2016 The Go Authors.  All rights reserved.
+// Copyright 2018 The Go Authors.  All rights reserved.
 // https://github.com/golang/protobuf
 //
 // Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,35 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/*
-Package ptypes contains code for interacting with well-known types.
-*/
-package ptypes
+package proto
+
+import "errors"
+
+// Deprecated: do not use.
+type Stats struct{ Emalloc, Dmalloc, Encode, Decode, Chit, Cmiss, Size uint64 }
+
+// Deprecated: do not use.
+func GetStats() Stats { return Stats{} }
+
+// Deprecated: do not use.
+func MarshalMessageSet(interface{}) ([]byte, error) {
+	return nil, errors.New("proto: not implemented")
+}
+
+// Deprecated: do not use.
+func UnmarshalMessageSet([]byte, interface{}) error {
+	return errors.New("proto: not implemented")
+}
+
+// Deprecated: do not use.
+func MarshalMessageSetJSON(interface{}) ([]byte, error) {
+	return nil, errors.New("proto: not implemented")
+}
+
+// Deprecated: do not use.
+func UnmarshalMessageSetJSON([]byte, interface{}) error {
+	return errors.New("proto: not implemented")
+}
+
+// Deprecated: do not use.
+func RegisterMessageSetType(Message, int32, string) {}
