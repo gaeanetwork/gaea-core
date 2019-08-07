@@ -3,6 +3,8 @@ package server
 import (
 	"net"
 
+	pb "github.com/gaeanetwork/gaea-core/protos/service"
+	"github.com/gaeanetwork/gaea-core/services/transmission"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )
@@ -16,6 +18,7 @@ type TeeServer struct {
 // NewTeeServer create a tee server by address
 func NewTeeServer(address string) *TeeServer {
 	grpcServer := grpc.NewServer()
+	pb.RegisterTransmissionServer(grpcServer, transmission.NewTransmissionService())
 	return &TeeServer{address: address, server: grpcServer}
 }
 

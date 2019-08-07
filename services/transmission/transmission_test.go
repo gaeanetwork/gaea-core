@@ -1,4 +1,4 @@
-package server
+package transmission
 
 import (
 	"crypto/rand"
@@ -58,5 +58,4 @@ func Test_TransferFile_Download(t *testing.T) {
 	rand.Read(data)
 	_, err = service.DownloadFile(nil, &pb.DownloadFileRequest{FileId: hex.EncodeToString(data)})
 	assert.Error(t, err, "no such file or directory")
-
 }
