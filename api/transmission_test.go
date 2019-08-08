@@ -12,6 +12,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/gaeanetwork/gaea-core/tee/server"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -21,7 +22,7 @@ func Test_TransferFile(t *testing.T) {
 	c := gin.Default()
 	router := c.Group("/testing")
 	RegisterAPI(router)
-	go server.NewTeeServer(serverAddr).Start()
+	go server.NewTeeServer(config.GRPCAddr).Start()
 
 	// write tmp file and make request body
 	filePath, data := filepath.Join(os.TempDir(), "hello"), []byte("world!")
@@ -43,7 +44,6 @@ func Test_TransferFile(t *testing.T) {
 	c.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
 	result := w.Body.String()
-	// assert.Equal(t, result, "'hello' uploaded!")
 	assert.Contains(t, result, "'hello' uploaded!")
 
 	// Download
@@ -59,7 +59,7 @@ func Test_UploadFile_Error(t *testing.T) {
 	c := gin.Default()
 	router := c.Group("/testing")
 	RegisterAPI(router)
-	serverAddr = "localhost:1"
+	config.GRPCAddr = "localhost:1"
 
 	// write tmp file and make request body
 	filePath, data := filepath.Join(os.TempDir(), "hello"), []byte("world!")
@@ -115,7 +115,7 @@ func Test_DownloadFile_Error(t *testing.T) {
 	c := gin.Default()
 	router := c.Group("/testing")
 	RegisterAPI(router)
-	serverAddr = "localhost:1"
+	config.GRPCAddr = "localhost:1"
 
 	// Invalid download request - error method
 	w := httptest.NewRecorder()
