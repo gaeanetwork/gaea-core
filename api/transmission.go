@@ -7,15 +7,11 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/gaeanetwork/gaea-core/common/config"
 	pb "github.com/gaeanetwork/gaea-core/protos/service"
 	"github.com/gaeanetwork/gaea-core/services/transmission"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
-)
-
-var (
-	// TODO - read in config
-	serverAddr = "localhost:12315"
 )
 
 // RegisterAPI register apis to gin server
@@ -43,7 +39,7 @@ func uploadFile(c *gin.Context) {
 	}
 
 	// TODO - packet it in another file
-	conn, err := grpc.Dial(serverAddr, grpc.WithInsecure())
+	conn, err := grpc.Dial(config.GRPCAddr, grpc.WithInsecure())
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": err.Error()})
 		return
@@ -75,7 +71,7 @@ func downloadFile(c *gin.Context) {
 	}
 
 	// TODO - packet it in another file
-	conn, err := grpc.Dial(serverAddr, grpc.WithInsecure())
+	conn, err := grpc.Dial(config.GRPCAddr, grpc.WithInsecure())
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": err.Error()})
 		return
