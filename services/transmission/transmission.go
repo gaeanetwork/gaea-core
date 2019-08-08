@@ -1,4 +1,4 @@
-package server
+package transmission
 
 import (
 	"context"
@@ -13,21 +13,27 @@ import (
 	"github.com/pkg/errors"
 )
 
-// TransmissionService is used to do some transmission tasks
-type TransmissionService struct {
+const (
+	// MaxFileIDSize Is the maximum file id size. The File calculated by hash is 32 bits,
+	// and the file id is a hex string, so the file id size is 32 * 8 / 4 = 64.
+	MaxFileIDSize = 64
+)
+
+// Service is used to do some transmission tasks
+type Service struct {
 	location    string
 	maxFileSize int
 }
 
 // NewTransmissionService create a transmission service
-func NewTransmissionService() *TransmissionService {
+func NewTransmissionService() *Service {
 	// TODO - read in config
 	location, maxFileSize := "/tmp/data/files/", 4*1024*1024
-	return &TransmissionService{location, maxFileSize}
+	return &Service{location, maxFileSize}
 }
 
 // UploadFile is used to process files uploaded by the client.
-func (s *TransmissionService) UploadFile(ctx context.Context, req *pb.UploadFileRequest) (*pb.UploadFileResponse, error) {
+func (s *Service) UploadFile(ctx context.Context, req *pb.UploadFileRequest) (*pb.UploadFileResponse, error) {
 	fileSize := len(req.Data)
 	if fileSize == 0 {
 		return nil, errors.New("file size is zero")
@@ -51,10 +57,11 @@ func (s *TransmissionService) UploadFile(ctx context.Context, req *pb.UploadFile
 }
 
 // DownloadFile is used to process the file requested by the client to download.
-func (s *TransmissionService) DownloadFile(ctx context.Context, req *pb.DownloadFileRequest) (*pb.DownloadFileResponse, error) {
+func (s *Service) DownloadFile(ctx context.Context, req *pb.DownloadFileRequest) (*pb.DownloadFileResponse, error) {
 	idSize := len(req.FileId)
-	if idSize != 64 { // hash is 32 bits, FileId is hex string, so id size is 32 * 8 / 4 = 64.
-		return nil, errors.Errorf("invalid file id size, should be 64, fileID: %s, size: %d", req.FileId, idSize)
+	if idSize != MaxFileIDSize {
+		return nil, errors.Errorf("invalid file id size, should be %d, fileID: %s, size: %d",
+			MaxFileIDSize, req.FileId, idSize)
 	}
 
 	filePath := filepath.Join(s.location, req.FileId)
