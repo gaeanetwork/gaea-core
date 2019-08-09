@@ -63,9 +63,9 @@ path: /files/{file_id} [GET]
 */
 func downloadFile(c *gin.Context) {
 	fileID := c.Param("file_id")
-	if idSize := len(fileID); idSize != transmission.MaxFileIDSize {
+	if idSize := len(fileID); idSize != transmission.StandardIDSize {
 		errmsg := fmt.Sprintf("invalid file id size, should be %d, file_id: %s, size: %d",
-			transmission.MaxFileIDSize, fileID, idSize)
+			transmission.StandardIDSize, fileID, idSize)
 		c.JSON(http.StatusBadRequest, gin.H{"error": errmsg})
 		return
 	}
@@ -85,8 +85,12 @@ func downloadFile(c *gin.Context) {
 		return
 	}
 
-	c.Header("Content-Disposition", "attachment; filename="+url.QueryEscape(fileID))
+	returnFile(c, url.QueryEscape(fileID), resp.Data)
+}
+
+func returnFile(c *gin.Context, filename string, fileData []byte) {
+	c.Header("Content-Disposition", "attachment; filename="+filename)
 	c.Header("Content-Type", "application/octet-stream")
-	c.Header("Accept-Length", fmt.Sprintf("%d", len(resp.Data)))
-	c.Writer.Write(resp.Data)
+	c.Header("Accept-Length", fmt.Sprintf("%d", fileData))
+	c.Writer.Write(fileData)
 }

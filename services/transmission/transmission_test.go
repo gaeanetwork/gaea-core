@@ -2,6 +2,7 @@ package transmission
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"os"
 	"testing"
@@ -44,6 +45,35 @@ func Test_TransferFile_Upload(t *testing.T) {
 	uploadReq = &pb.UploadFileRequest{Data: testData}
 	_, err = service.UploadFile(nil, uploadReq)
 	assert.Error(t, err, "permission denied")
+}
+
+func Test_TransferFile_UserUpload(t *testing.T) {
+	service := NewTransmissionService()
+	userID := sha256.Sum256([]byte("abc"))
+	uploadReq := &pb.UploadFileRequest{Data: testData, UserId: hex.EncodeToString(userID[:])}
+	resp, err := service.UploadFile(nil, uploadReq)
+	assert.NoError(t, err)
+	assert.NotNil(t, resp)
+	defer os.RemoveAll(service.location)
+
+	resp1, err := service.DownloadFile(nil, &pb.DownloadFileRequest{FileId: resp.FileId, UserId: hex.EncodeToString(userID[:])})
+	assert.NoError(t, err)
+	assert.NotNil(t, resp1)
+	assert.Equal(t, resp1.Data, testData)
+
+	// Invalid upload - user id size
+	uploadReq1 := &pb.UploadFileRequest{Data: testData, UserId: "abc"}
+	_, err = service.UploadFile(nil, uploadReq1)
+	assert.Error(t, err, "invalid user id size")
+
+	// Invalid download - user id size
+	_, err = service.DownloadFile(nil, &pb.DownloadFileRequest{FileId: resp.FileId, UserId: "abc"})
+	assert.Error(t, err, "invalid user id size")
+
+	// Invalid download - not specific userId
+	_, err = service.DownloadFile(nil, &pb.DownloadFileRequest{FileId: resp.FileId})
+	assert.Error(t, err, "no such file or directory")
+
 }
 
 func Test_TransferFile_Download(t *testing.T) {

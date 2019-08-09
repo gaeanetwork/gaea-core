@@ -14,6 +14,7 @@ service Transmission {
 
 message UploadFileRequest {
     bytes data = 1;
+    string user_id = 2;
 }
 
 message UploadFileResponse {
@@ -22,6 +23,7 @@ message UploadFileResponse {
 
 message DownloadFileRequest {
     string file_id = 1;
+    string user_id = 2;
 }
 
 message DownloadFileResponse {
