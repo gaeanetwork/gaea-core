@@ -83,3 +83,31 @@ func GetNotification(id string) (*Notification, error) {
 
 	return &d, nil
 }
+
+// Request to view user data, this will send a notification to the data owner and will receive a reminder.
+func Request(dataID, userID, hash string, signatures []string) (*Notification, error) {
+	service, err := factory.GetSmartContractService(ImplementPlatform)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to get smart contract service, platform: %s", ImplementPlatform)
+	}
+
+	if len(signatures) == 0 {
+		signatures = make([]string, 1)
+	}
+	signature, err := json.Marshal(signatures)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to marshal signatures, signatures: %v", signatures)
+	}
+
+	result, err := service.Query(ChaincodeName, []string{MethodRequest, dataID, userID, hash, string(signature)})
+	if err != nil {
+		return nil, err
+	}
+
+	var notification Notification
+	if err = json.Unmarshal([]byte(result), &notification); err != nil {
+		return nil, errors.Wrapf(err, "failed to unmarshal notification, result: %s", result)
+	}
+
+	return &notification, nil
+}
