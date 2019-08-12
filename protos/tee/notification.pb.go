@@ -3,9 +3,11 @@
 
 package tee
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
+import (
+	fmt "fmt"
+	proto "github.com/golang/protobuf/proto"
+	math "math"
+)
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -16,7 +18,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type AuthStatus int32
 
@@ -31,6 +33,7 @@ var AuthStatus_name = map[int32]string{
 	1: "Authorized",
 	2: "Refused",
 }
+
 var AuthStatus_value = map[string]int32{
 	"UnAuthorized": 0,
 	"Authorized":   1,
@@ -40,8 +43,9 @@ var AuthStatus_value = map[string]int32{
 func (x AuthStatus) String() string {
 	return proto.EnumName(AuthStatus_name, int32(x))
 }
+
 func (AuthStatus) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_notification_9fd4f870b637ffaf, []int{0}
+	return fileDescriptor_736a457d4a5efa07, []int{0}
 }
 
 type Notification struct {
@@ -61,16 +65,17 @@ func (m *Notification) Reset()         { *m = Notification{} }
 func (m *Notification) String() string { return proto.CompactTextString(m) }
 func (*Notification) ProtoMessage()    {}
 func (*Notification) Descriptor() ([]byte, []int) {
-	return fileDescriptor_notification_9fd4f870b637ffaf, []int{0}
+	return fileDescriptor_736a457d4a5efa07, []int{0}
 }
+
 func (m *Notification) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Notification.Unmarshal(m, b)
 }
 func (m *Notification) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Notification.Marshal(b, m, deterministic)
 }
-func (dst *Notification) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Notification.Merge(dst, src)
+func (m *Notification) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Notification.Merge(m, src)
 }
 func (m *Notification) XXX_Size() int {
 	return xxx_messageInfo_Notification.Size(m)
@@ -131,13 +136,13 @@ func (m *Notification) GetRefusedReason() string {
 }
 
 func init() {
-	proto.RegisterType((*Notification)(nil), "tee.Notification")
 	proto.RegisterEnum("tee.AuthStatus", AuthStatus_name, AuthStatus_value)
+	proto.RegisterType((*Notification)(nil), "tee.Notification")
 }
 
-func init() { proto.RegisterFile("notification.proto", fileDescriptor_notification_9fd4f870b637ffaf) }
+func init() { proto.RegisterFile("notification.proto", fileDescriptor_736a457d4a5efa07) }
 
-var fileDescriptor_notification_9fd4f870b637ffaf = []byte{
+var fileDescriptor_736a457d4a5efa07 = []byte{
 	// 255 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x4c, 0x90, 0x31, 0x4f, 0xc3, 0x30,
 	0x10, 0x85, 0x71, 0x5a, 0x5a, 0xf5, 0x12, 0xd2, 0xe8, 0x26, 0x0b, 0x31, 0x04, 0x10, 0x6a, 0xc4,

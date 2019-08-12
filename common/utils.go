@@ -6,6 +6,12 @@ import (
 	"strconv"
 )
 
+const (
+	// StandardIDSize Is the standard hash id size. The data id calculated by hash is 32 bits,
+	// and the id is a hex string, so the id size is 32 * 8 / 4 = 64.
+	StandardIDSize = 64
+)
+
 // ContainsStringArray return true if the dest is a subset of src, otherwise return false and unmatched string
 func ContainsStringArray(src []string, dest []string) (string, bool) {
 	stringSet := make(map[string]struct{})

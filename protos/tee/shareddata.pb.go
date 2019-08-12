@@ -3,9 +3,11 @@
 
 package tee
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
+import (
+	fmt "fmt"
+	proto "github.com/golang/protobuf/proto"
+	math "math"
+)
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -16,7 +18,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type SharedData struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -36,16 +38,17 @@ func (m *SharedData) Reset()         { *m = SharedData{} }
 func (m *SharedData) String() string { return proto.CompactTextString(m) }
 func (*SharedData) ProtoMessage()    {}
 func (*SharedData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_shareddata_a35a89393d6472ce, []int{0}
+	return fileDescriptor_19a5eafc2e5a1cc0, []int{0}
 }
+
 func (m *SharedData) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SharedData.Unmarshal(m, b)
 }
 func (m *SharedData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_SharedData.Marshal(b, m, deterministic)
 }
-func (dst *SharedData) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SharedData.Merge(dst, src)
+func (m *SharedData) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SharedData.Merge(m, src)
 }
 func (m *SharedData) XXX_Size() int {
 	return xxx_messageInfo_SharedData.Size(m)
@@ -116,9 +119,9 @@ func init() {
 	proto.RegisterType((*SharedData)(nil), "tee.SharedData")
 }
 
-func init() { proto.RegisterFile("shareddata.proto", fileDescriptor_shareddata_a35a89393d6472ce) }
+func init() { proto.RegisterFile("shareddata.proto", fileDescriptor_19a5eafc2e5a1cc0) }
 
-var fileDescriptor_shareddata_a35a89393d6472ce = []byte{
+var fileDescriptor_19a5eafc2e5a1cc0 = []byte{
 	// 201 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x4c, 0x90, 0xc1, 0x4a, 0x04, 0x31,
 	0x0c, 0x40, 0xe9, 0x74, 0x77, 0xd5, 0x88, 0x8b, 0x04, 0x0f, 0x3d, 0x2d, 0x45, 0x10, 0xf6, 0xe4,
