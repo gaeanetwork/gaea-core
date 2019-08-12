@@ -38,3 +38,33 @@ func GetData(id string) (*SharedData, error) {
 
 	return &d, nil
 }
+
+// UploadData Upload used to upload shared data for users. After the data is uploaded, once someone else
+// requests to query this data, the user will be notified and can authorize or reject the request.
+func UploadData(data *SharedData, hash string) (*SharedData, error) {
+	service, err := factory.GetSmartContractService(ImplementPlatform)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to get smart contract service, platform: %s", ImplementPlatform)
+	}
+
+	if len(data.Signatures) == 0 {
+		data.Signatures = make([]string, 1)
+	}
+
+	signature, err := json.Marshal(data.Signatures)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to marshal data signatures, signatures: %v", data.Signatures)
+	}
+
+	result, err := service.Invoke(ChaincodeName, []string{MethodUpload, data.Ciphertext, data.Hash, data.Description, data.Owner, hash, string(signature)})
+	if err != nil {
+		return nil, err
+	}
+
+	var d SharedData
+	if err = json.Unmarshal([]byte(result), &d); err != nil {
+		return nil, errors.Wrapf(err, "failed to unmarshal shared data, result: %s", result)
+	}
+
+	return &d, nil
+}
