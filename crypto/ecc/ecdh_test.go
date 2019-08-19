@@ -81,8 +81,8 @@ func Test_GetAlgorithm(t *testing.T) {
 }
 
 var (
-	privHexForTests = "307702010104207843249525ae7f43e623f5bb2b28bb8b22420e8b07d14212c12ce367e980f568a00a06082a8648ce3d030107a14403420004deb43a5bb4c34cf8db53311d4d9f95d2356b8c011349ecb04fc00b73c303bc9dc0675f4ca45a562f589b993a94129482eb9b03f259ce8982e525927c3f70fdbe"
-	pubHexForTests  = "04deb43a5bb4c34cf8db53311d4d9f95d2356b8c011349ecb04fc00b73c303bc9dc0675f4ca45a562f589b993a94129482eb9b03f259ce8982e525927c3f70fdbe"
+	privHexForTests = "308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b02010104202d130ea6dac76fcae718fbd20bf146643aa66fe6e5902975d2c5ed6ab3bcb5e2a144034200048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293"
+	pubHexForTests  = "048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293"
 )
 
 func Test_Android_ECDH(t *testing.T) {
@@ -95,7 +95,12 @@ func Test_Android_ECDH(t *testing.T) {
 	x, y := elliptic.Unmarshal(elliptic.P256(), pubBytes)
 	pubkey := &ecdsa.PublicKey{Curve: elliptic.P256(), X: x, Y: y}
 
-	priv, err := FromPrivHex(privHexForTests)
+	privBytes, err := hex.DecodeString(privHexForTests)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	priv, err := FromPrivBytes(privBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,12 +108,12 @@ func Test_Android_ECDH(t *testing.T) {
 	ecdh := &ECDH{}
 	secretkey, err := ecdh.GenerateSharedSecret(priv, pubkey)
 	assert.NoError(t, err)
-	assert.Equal(t, "726cc22f046058c4e4173f11734c2705a83b3c9f73ad48a4b36ee476dbc6f4e2", hex.EncodeToString(secretkey))
+	assert.Equal(t, "2c56244cf5e84a5f05aafc1fb87cd10690adaeaa3ccb637bc2d27b028011f2ec", hex.EncodeToString(secretkey))
 
 	data := []byte("Hello World!")
 	ciphertext, err := crypto.AesEncrypt(data, secretkey)
 	assert.NoError(t, err)
-	assert.Equal(t, "65b9269169d8896ad1a5428dc8a51465", hex.EncodeToString(ciphertext))
+	assert.Equal(t, "39b105a7045acde8c623be343abbbcd7", hex.EncodeToString(ciphertext))
 }
 
 func Test_SHA256(t *testing.T) {
