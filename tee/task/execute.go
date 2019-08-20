@@ -11,6 +11,9 @@ import (
 	"path/filepath"
 
 	docker "github.com/fsouza/go-dockerclient"
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/system"
+	"github.com/gaeanetwork/gaea-core/smartcontract/factory"
 	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/hyperledger/fabric/core/container/util"
 	"github.com/pkg/errors"
@@ -24,6 +27,54 @@ type ExecuteRequest struct {
 	ContainerType string `form:"container_type"`
 	Hash          string `form:"hash"`
 	Signature     string `form:"signature"`
+}
+
+// Execute executes a tee task by sending a execute transaction to the blockchain.
+func Execute(req *ExecuteRequest) (string, error) {
+	containerName, err := GetContainerName(ChaincodeName)
+	if err != nil {
+		return "", errors.Wrapf(err, "failed to get container name, chaincode: %s", ChaincodeName)
+	}
+
+	teetask, err := GetByID(req.TaskID)
+	if err != nil {
+		return "", errors.Wrapf(err, "Tee task cannot found, taskID: %v", req.TaskID)
+	}
+
+	if err = uploadToTeetaskContainer(containerName, req.Algorithm, teetask); err != nil {
+		return "", errors.Wrapf(err, "failed to upload to tee task container, address: %v", teetask.ResultAddress)
+	}
+
+	service, err := factory.GetSmartContractService(tee.ImplementPlatform)
+	if err != nil {
+		return "", errors.Wrapf(err, "failed to get smart contract service, platform: %s", tee.ImplementPlatform)
+	}
+
+	result, err := service.Invoke(ChaincodeName, []string{MethodExecute, req.TaskID, req.Executor, req.ContainerType, req.Hash, req.Signature})
+	if err != nil {
+		return "", fmt.Errorf("Error executing tee task, error: %v", err)
+	}
+
+	if err = downloadFromTeetaskContainer(containerName, teetask); err != nil {
+		return "", errors.Wrapf(err, "failed to downlaod from tee task container, address: %v", teetask.ResultAddress)
+	}
+
+	return fmt.Sprintf("Successful execution, id: %s, the execution log in %s", result, teetask.ResultAddress), nil
+}
+
+// GetContainerName get chaincode docker container name by chaincode Name
+func GetContainerName(chaincodeName string) (string, error) {
+	config, err := chaincode.GetConfig(chaincodeName)
+	if err != nil {
+		return "", errors.Wrapf(err, "failed to get chaincode config, name: %s", chaincodeName)
+	}
+
+	definition, err := system.GetChaincodeDefinition(config.ChannelID, config.ChaincodeName)
+	if err != nil {
+		return "", errors.Wrap(err, "failed to get chaincode definition")
+	}
+
+	return chaincode.GetContainerName(definition.CCName(), definition.CCVersion()), nil
 }
 
 func uploadToTeetaskContainer(containerName string, algorithm []byte, teetask *tee.Task) error {
