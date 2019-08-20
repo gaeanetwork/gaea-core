@@ -14,6 +14,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	privHexForTests = "308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b02010104202d130ea6dac76fcae718fbd20bf146643aa66fe6e5902975d2c5ed6ab3bcb5e2a144034200048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293"
+	pubHexForTests  = "048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293"
+)
+
 func Test_ECDH(t *testing.T) {
 	priv1, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	assert.NoError(t, err)
@@ -79,11 +84,6 @@ func Test_GetAlgorithm(t *testing.T) {
 	ecdh := &ECDH{}
 	assert.Equal(t, keyagreement.ECDH, ecdh.GetAlgorithm())
 }
-
-var (
-	privHexForTests = "308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b02010104202d130ea6dac76fcae718fbd20bf146643aa66fe6e5902975d2c5ed6ab3bcb5e2a144034200048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293"
-	pubHexForTests  = "048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293"
-)
 
 func Test_Android_ECDH(t *testing.T) {
 	androidPubKey := "04f2ca2888417bac66b5e7bcdbcbaefe1771f45e8ac29eef23ddc84157ab16e005bd7ca457632658220a6aa721d326961e4014dae8c789030c82640bd083f3daae"
