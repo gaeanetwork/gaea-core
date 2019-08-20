@@ -1,4 +1,4 @@
-package main
+package data
 
 import (
 	"testing"
@@ -8,7 +8,7 @@ import (
 )
 
 func Test_Init(t *testing.T) {
-	stub := shim.NewMockStub("tee", new(TrustedExecutionEnv))
+	stub := shim.NewMockStub("tee", new(SharedDataService))
 
 	args := [][]byte{}
 	response := stub.MockInit("1", args)
