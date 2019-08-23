@@ -1,6 +1,18 @@
 package chaincode
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric/protos/peer"
+)
+
+// index value
+var (
+	CompositeValue = []byte{0x00}
+)
+
+type getDataByID func(stub shim.ChaincodeStubInterface, args []string) peer.Response
 
 // CheckArgsEmpty check chaincode args are non-empty
 func CheckArgsEmpty(args []string, length int) error {
