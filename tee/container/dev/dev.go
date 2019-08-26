@@ -3,6 +3,7 @@ package dev
 import (
 	"crypto"
 	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -43,7 +44,7 @@ func (c *Container) Upload(algorithm []byte, dataList [][]byte) error {
 
 	// Calculate algorithm hash
 	hash := sha256.Sum256(algorithm)
-	c.algorithmHash = common.BytesToHex(hash[:])
+	c.algorithmHash = hex.EncodeToString(hash[:])
 
 	c.program = filepath.Join(c.address, "main")
 	err := ioutil.WriteFile(c.program, algorithm, 0755)
@@ -57,7 +58,7 @@ func (c *Container) Upload(algorithm []byte, dataList [][]byte) error {
 		if hash = sha256.Sum256(data); err != nil {
 			return err
 		}
-		c.dataHash = append(c.dataHash, common.BytesToHex(hash[:]))
+		c.dataHash = append(c.dataHash, hex.EncodeToString(hash[:]))
 
 		arg := filepath.Join(c.address, strconv.Itoa(index))
 		if err = ioutil.WriteFile(arg, data, 0755); err != nil {

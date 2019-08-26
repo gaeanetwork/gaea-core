@@ -3,11 +3,11 @@ package dev
 import (
 	"crypto/rand"
 	"crypto/sha256"
+	"encoding/hex"
 	"io/ioutil"
 	"os"
 	"testing"
 
-	"github.com/gaeanetwork/gaea-core/common"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,7 +47,7 @@ func Test_Verify(t *testing.T) {
 	algorithmBytes := make([]byte, 32)
 	rand.Read(algorithmBytes)
 	hash := sha256.Sum256(algorithmBytes)
-	algorithmHash := common.BytesToHex(hash[:])
+	algorithmHash := hex.EncodeToString(hash[:])
 
 	dataList, dataHashes := make([][]byte, 10), make([]string, 10)
 	for index := 0; index < len(dataList); index++ {
@@ -55,7 +55,7 @@ func Test_Verify(t *testing.T) {
 		rand.Read(dataBytes)
 		hash = sha256.Sum256(dataBytes)
 		dataList[index] = dataBytes
-		dataHashes[index] = common.BytesToHex(hash[:])
+		dataHashes[index] = hex.EncodeToString(hash[:])
 	}
 
 	err1 := c.Upload(algorithmBytes, dataList)

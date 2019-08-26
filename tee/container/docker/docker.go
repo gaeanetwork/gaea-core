@@ -6,6 +6,7 @@ import (
 	"compress/gzip"
 	"crypto"
 	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"path/filepath"
 	"strconv"
@@ -73,7 +74,7 @@ func (c *Container) Upload(algorithm []byte, dataList [][]byte) error {
 
 	// Calculate algorithm hash
 	hash := sha256.Sum256(algorithm)
-	c.algorithmHash = common.BytesToHex(hash[:])
+	c.algorithmHash = hex.EncodeToString(hash[:])
 	c.cmd = filepath.Join(c.address, "main")
 	err := util.WriteBytesToPackage(c.cmd, algorithm, tw)
 	if err != nil {
@@ -86,7 +87,7 @@ func (c *Container) Upload(algorithm []byte, dataList [][]byte) error {
 		if hash = sha256.Sum256(data); err != nil {
 			return err
 		}
-		c.dataHash = append(c.dataHash, common.BytesToHex(hash[:]))
+		c.dataHash = append(c.dataHash, hex.EncodeToString(hash[:]))
 
 		arg := filepath.Join(c.address, strconv.Itoa(index))
 		if err = util.WriteBytesToPackage(arg, data, tw); err != nil {

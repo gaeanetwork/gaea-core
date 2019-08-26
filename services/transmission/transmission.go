@@ -17,6 +17,10 @@ const (
 	// StandardIDSize Is the standard id size. The data calculated by hash is 32 bits,
 	// and the id is a hex string, so the id size is 32 * 8 / 4 = 64.
 	StandardIDSize = 64
+
+	// DefaultLocation is the default file storage location.
+	// It should be re-read in the configuration.
+	DefaultLocation = "/tmp/data/files/"
 )
 
 // Service is used to do some transmission tasks
@@ -28,7 +32,7 @@ type Service struct {
 // NewTransmissionService create a transmission service
 func NewTransmissionService() *Service {
 	// TODO - read in config
-	location, maxFileSize := "/tmp/data/files/", 4*1024*1024
+	location, maxFileSize := DefaultLocation, 4*1024*1024
 	return &Service{location, maxFileSize}
 }
 

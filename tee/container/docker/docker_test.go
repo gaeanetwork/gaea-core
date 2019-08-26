@@ -3,11 +3,11 @@ package docker
 import (
 	"crypto/rand"
 	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io/ioutil"
 	"testing"
 
-	"github.com/gaeanetwork/gaea-core/common"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -48,7 +48,7 @@ func Test_Upload(t *testing.T) {
 	err = c.Upload(algorithm, dataList)
 	assert.NoError(t, err)
 	hash := sha256.Sum256(algorithm)
-	algorithmHash := common.BytesToHex(hash[:])
+	algorithmHash := hex.EncodeToString(hash[:])
 	assert.Equal(t, algorithmHash, c.algorithmHash)
 }
 
@@ -61,7 +61,7 @@ func Test_Verify(t *testing.T) {
 	rand.Read(algorithmBytes)
 	hash := sha256.Sum256(algorithmBytes)
 	assert.NoError(t, err)
-	algorithmHash := common.BytesToHex(hash[:])
+	algorithmHash := hex.EncodeToString(hash[:])
 
 	dataList, dataHashes := make([][]byte, 10), make([]string, 10)
 	for index := 0; index < len(dataList); index++ {
@@ -69,7 +69,7 @@ func Test_Verify(t *testing.T) {
 		rand.Read(dataBytes)
 		hash = sha256.Sum256(dataBytes)
 		dataList[index] = dataBytes
-		dataHashes[index] = common.BytesToHex(hash[:])
+		dataHashes[index] = hex.EncodeToString(hash[:])
 	}
 
 	err1 := c.Upload(algorithmBytes, dataList)
