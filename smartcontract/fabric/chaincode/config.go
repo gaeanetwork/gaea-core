@@ -3,10 +3,14 @@ package chaincode
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
+	"github.com/gaeanetwork/gaea-core/common"
+	"github.com/gogo/protobuf/proto"
 	"github.com/hyperledger/fabric/core/container/ccintf"
+	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -21,6 +25,7 @@ var (
 	once      sync.Once
 	rwMutex   sync.RWMutex
 	mapConfig = map[string]*Config{}
+	logger    = flogging.MustGetLogger("chaincodeCmd")
 )
 
 // Config for chaincode
@@ -46,6 +51,33 @@ type Config struct {
 	WaitForEvent          bool
 	WaitForEventTimeout   time.Duration
 	CommandName           string
+}
+
+func (cfg *Config) newChaincodeSpec(chaincodeCtorJSON string) (*peer.ChaincodeSpec, error) {
+	spec := &peer.ChaincodeSpec{}
+
+	// Build the spec
+	input := &peer.ChaincodeInput{}
+	if err := proto.Unmarshal([]byte(chaincodeCtorJSON), input); err != nil {
+		return spec, errors.Wrap(err, "chaincode argument error")
+	}
+
+	cfg.ChaincodeLang = strings.ToUpper(cfg.ChaincodeLang)
+	spec = &peer.ChaincodeSpec{
+		Type:        peer.ChaincodeSpec_Type(peer.ChaincodeSpec_Type_value[cfg.ChaincodeLang]),
+		ChaincodeId: &peer.ChaincodeID{Path: cfg.ChaincodePath, Name: cfg.ChaincodeName, Version: cfg.ChaincodeVersion},
+		Input:       input,
+	}
+	return spec, nil
+}
+
+// CreateChaincodeSpec create chaincode spec by config
+func (cfg *Config) CreateChaincodeSpec() (*peer.ChaincodeSpec, error) {
+	return &peer.ChaincodeSpec{
+		Type:        peer.ChaincodeSpec_Type(peer.ChaincodeSpec_Type_value[strings.ToUpper(cfg.ChaincodeLang)]),
+		ChaincodeId: &peer.ChaincodeID{Path: cfg.ChaincodePath, Name: cfg.ChaincodeName, Version: cfg.ChaincodeVersion},
+		Input:       &peer.ChaincodeInput{Args: common.ConvertArrayStringToByte(cfg.ChaincodeInput)},
+	}, nil
 }
 
 // GetConfig get the config by chaincode name, initialize if it is nil
