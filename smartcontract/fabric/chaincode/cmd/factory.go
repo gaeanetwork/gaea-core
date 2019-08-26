@@ -4,8 +4,8 @@ import (
 	"crypto/tls"
 	"fmt"
 
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/client"
 	"github.com/hyperledger/fabric/msp"
-	"gitlab.com/jaderabbit/go-rabbit/common/client"
 )
 
 // ChaincodeCmdFactory holds the clients used by ChaincodeCmd

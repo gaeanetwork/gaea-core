@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/hyperledger/fabric/common/flogging"
 	"github.com/hyperledger/fabric/core/container/ccintf"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
@@ -21,6 +22,7 @@ var (
 	once      sync.Once
 	rwMutex   sync.RWMutex
 	mapConfig = map[string]*Config{}
+	logger    = flogging.MustGetLogger("chaincodeCmd")
 )
 
 // Config for chaincode
