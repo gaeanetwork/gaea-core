@@ -4,6 +4,8 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -51,16 +53,16 @@ func Execute(req *ExecuteRequest) (string, error) {
 		return "", errors.Wrapf(err, "failed to get smart contract service, platform: %s", tee.ImplementPlatform)
 	}
 
-	result, err := service.Invoke(ChaincodeName, []string{MethodExecute, req.TaskID, req.Executor, req.ContainerType, req.Hash, req.Signature})
+	executeID, err := service.Invoke(ChaincodeName, []string{MethodExecute, req.TaskID, req.Executor, req.ContainerType, req.Hash, req.Signature})
 	if err != nil {
 		return "", fmt.Errorf("Error executing tee task, error: %v", err)
 	}
 
-	if err = downloadFromTeetaskContainer(containerName, teetask); err != nil {
+	if err = downloadFromTeetaskContainer(containerName, executeID, teetask); err != nil {
 		return "", errors.Wrapf(err, "failed to downlaod from tee task container, address: %v", teetask.ResultAddress)
 	}
 
-	return fmt.Sprintf("Successful execution, id: %s, the execution log in %s", result, teetask.ResultAddress), nil
+	return string(executeID), nil
 }
 
 // GetContainerName get chaincode docker container name by chaincode Name
@@ -160,7 +162,7 @@ func upload(containerName string, filesToUpload map[string][]byte) error {
 	})
 }
 
-func downloadFromTeetaskContainer(containerName string, teetask *tee.Task) error {
+func downloadFromTeetaskContainer(containerName string, executeID []byte, teetask *tee.Task) error {
 	for _, notificationID := range teetask.DataNotifications {
 		notification, err := tee.GetNotification(notificationID)
 		if err != nil {
@@ -203,12 +205,8 @@ func downloadFromTeetaskContainer(containerName string, teetask *tee.Task) error
 				result.Write(data[:n])
 			}
 
-			saveDir := filepath.Dir(logPath)
-			if err = os.MkdirAll(saveDir, os.ModePerm); err != nil {
-				return errors.Wrap(err, "failed to make dir all")
-			}
-
-			if err = ioutil.WriteFile(logPath, result.Bytes(), os.ModePerm); err != nil {
+			fileID := sha256.Sum256(append(executeID, []byte(notification.Data.Owner)...))
+			if err = ioutil.WriteFile(filepath.Join(transmission.DefaultLocation, hex.EncodeToString(fileID[:])), result.Bytes(), os.ModePerm); err != nil {
 				return errors.Wrap(err, "failed to write log file")
 			}
 		}
