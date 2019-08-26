@@ -25,6 +25,7 @@ var (
 	once      sync.Once
 	rwMutex   sync.RWMutex
 	mapConfig = map[string]*Config{}
+	logger    = flogging.MustGetLogger("chaincodeCmd")
 )
 
 // Config for chaincode
