@@ -28,6 +28,15 @@ func ContainsStringArray(src []string, dest []string) (string, bool) {
 	return "", true
 }
 
+// ConvertArrayStringToByte convert the array sting to []byte
+func ConvertArrayStringToByte(arrayStr []string) [][]byte {
+	arrayByte := make([][]byte, len(arrayStr))
+	for i, str := range arrayStr {
+		arrayByte[i] = []byte(str)
+	}
+	return arrayByte
+}
+
 // FileOrFolderExists checks if a file or folder exists
 func FileOrFolderExists(fileOrFolder string) bool {
 	_, err := os.Stat(fileOrFolder)
