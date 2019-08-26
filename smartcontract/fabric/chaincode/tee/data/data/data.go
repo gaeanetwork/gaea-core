@@ -7,16 +7,19 @@ import (
 	pb "github.com/hyperledger/fabric/protos/peer"
 )
 
-var (
-	ownerIDIndex                   = "owner~id"
-	requesterDIDIDIndex            = "requester~did~id"
-	requesterStatusDIDIDIndex      = "requester~status~did~id"
-	ownerDIDIDIndex                = "owner~did~id"
-	ownerRequesterDIDIDIndex       = "owner~requester~did~id"
-	ownerStatusDIDIDIndex          = "owner~status~did~id"
-	ownerRequesterStatusDIDIDIndex = "owner~requester~status~did~id"
-	compositeValue                 = []byte{0x00}
+// index keys
+const (
+	OwnerIDIndex                   = "owner~id"
+	RequesterDIDIDIndex            = "requester~did~id"
+	RequesterStatusDIDIDIndex      = "requester~status~did~id"
+	OwnerDIDIDIndex                = "owner~did~id"
+	OwnerRequesterDIDIDIndex       = "owner~requester~did~id"
+	OwnerStatusDIDIDIndex          = "owner~status~did~id"
+	OwnerRequesterStatusDIDIDIndex = "owner~requester~status~did~id"
 )
+
+// CompositeValue index value
+var CompositeValue = []byte{0x00}
 
 // SharedDataService chaincode implementation
 type SharedDataService struct {

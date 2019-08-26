@@ -1,10 +1,18 @@
 package chaincode
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
+)
+
+const (
+	installCmdName     = "install"
+	instantiateCmdName = "instantiate"
+	upgradeCmdName     = "upgrade"
+	packageCmdName     = "package"
 )
 
 // index value
@@ -38,7 +46,7 @@ func CheckArgsLength(args []string, length int) error {
 }
 
 // GetDataByID query data by id
-func GetDataByID(stub shim.ChaincodeStubInterface, id string) pb.Response {
+func GetDataByID(stub shim.ChaincodeStubInterface, id string) peer.Response {
 	var bs []byte
 	var err error
 	if bs, err = stub.GetState(id); err != nil {
@@ -51,7 +59,7 @@ func GetDataByID(stub shim.ChaincodeStubInterface, id string) pb.Response {
 }
 
 // GetDataListByIndexAndKeys through index to query data list
-func GetDataListByIndexAndKeys(stub shim.ChaincodeStubInterface, index string, keys []string, idIndex int, getFunc getDataByID) pb.Response {
+func GetDataListByIndexAndKeys(stub shim.ChaincodeStubInterface, index string, keys []string, idIndex int, getFunc getDataByID) peer.Response {
 	resultsIterator, err := stub.GetStateByPartialCompositeKey(index, keys)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to get state by partial composite key, index: %s, keys: %v, error: %v", index, keys, err))
@@ -59,7 +67,7 @@ func GetDataListByIndexAndKeys(stub shim.ChaincodeStubInterface, index string, k
 	defer resultsIterator.Close()
 
 	count, dataList := 0, make([][]byte, 0)
-	var response pb.Response
+	var response peer.Response
 	for ; resultsIterator.HasNext(); count++ {
 		responseRange, err := resultsIterator.Next()
 		if err != nil {

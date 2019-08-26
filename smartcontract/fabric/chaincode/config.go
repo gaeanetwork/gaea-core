@@ -9,6 +9,7 @@ import (
 
 	"github.com/gaeanetwork/gaea-core/common"
 	"github.com/gogo/protobuf/proto"
+	"github.com/hyperledger/fabric/common/flogging"
 	"github.com/hyperledger/fabric/core/container/ccintf"
 	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/pkg/errors"
