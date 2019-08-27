@@ -4,13 +4,15 @@ import (
 	"encoding/json"
 
 	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/tee/data/data"
 	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric/protos/peer"
 )
 
-// upload shared data
-func upload(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+// upload shared sharedData
+func upload(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	var err error
 	if err = chaincode.CheckArgsEmpty(args, 4); err != nil {
 		return shim.Error(err.Error())
@@ -29,7 +31,7 @@ func upload(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 		return shim.Error("Error getting transaction timestamp: " + err.Error())
 	}
 
-	data := &tee.SharedData{
+	sharedData := &tee.SharedData{
 		ID:                     stub.GetTxID(),
 		Ciphertext:             args[0],
 		Hash:                   args[1],
@@ -41,26 +43,26 @@ func upload(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	}
 
 	if len(sigs) > 0 && sigs[0] != "" {
-		if err = chaincode.CheckArgsContainsHashAndSignatures(args, data.Owner); err != nil {
+		if err = chaincode.CheckArgsContainsHashAndSignatures(args, sharedData.Owner); err != nil {
 			return shim.Error("Failed to verify ecdsa signature, error: " + err.Error())
 		}
 	}
 
 	var bs []byte
-	if bs, err = json.Marshal(data); err != nil {
-		return shim.Error("Error marshaling shard data: " + err.Error())
+	if bs, err = json.Marshal(sharedData); err != nil {
+		return shim.Error("Error marshaling shard sharedData: " + err.Error())
 	}
 
-	if err = stub.PutState(data.ID, bs); err != nil {
-		return shim.Error("Error putting shard data to state: " + err.Error())
+	if err = stub.PutState(sharedData.ID, bs); err != nil {
+		return shim.Error("Error putting shard sharedData to state: " + err.Error())
 	}
 
 	// Save ownerIDIndexKey
 	var ownerIDIndexKey string
-	if ownerIDIndexKey, err = stub.CreateCompositeKey(ownerIDIndex, []string{data.Owner, data.ID}); err != nil {
+	if ownerIDIndexKey, err = stub.CreateCompositeKey(data.OwnerIDIndex, []string{sharedData.Owner, sharedData.ID}); err != nil {
 		return shim.Error(err.Error())
 	}
 
-	stub.PutState(ownerIDIndexKey, compositeValue)
+	stub.PutState(ownerIDIndexKey, data.CompositeValue)
 	return shim.Success(bs)
 }

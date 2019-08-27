@@ -1,6 +1,7 @@
 package invoker
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
@@ -158,9 +159,14 @@ func sendSharedDataRequest(stub shim.ChaincodeStubInterface, dataID, privHex, re
 }
 
 func constructSharedDataRequestArgs(data *tee.SharedData, privHex, requester string) ([][]byte, error) {
+	privBytes, err := hex.DecodeString(privHex)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to decode hex private key hex string")
+	}
+
 	args := []string{data.ID, requester}
 	if len(data.Signatures) > 0 && data.Signatures[0] != "" {
-		hash, sigs, err := chaincode.GetArgsHashAndSignatures(privHex, args)
+		hash, sigs, err := chaincode.GetArgsHashAndSignatures(privBytes, args)
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to get arguments hash and signatures, args: %v", args)
 		}

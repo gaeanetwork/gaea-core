@@ -5,13 +5,16 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 
 	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/cmd"
 	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/client"
+	"github.com/gogo/protobuf/proto"
 	"github.com/hyperledger/fabric/common/cauthdsl"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/msp"
 	"github.com/hyperledger/fabric/peer/common"
+	pcommon "github.com/hyperledger/fabric/protos/common"
 	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/hyperledger/fabric/protos/utils"
 	"github.com/pkg/errors"
@@ -133,6 +136,70 @@ func checkChaincodeCmdParams(cfg *Config) error {
 
 	// TODO check cfg.CHaincodeInput
 	return nil
+}
+
+type collectionConfigJSON struct {
+	Name           string `json:"name"`
+	Policy         string `json:"policy"`
+	RequiredCount  int32  `json:"requiredPeerCount"`
+	MaxPeerCount   int32  `json:"maxPeerCount"`
+	BlockToLive    uint64 `json:"blockToLive"`
+	MemberOnlyRead bool   `json:"memberOnlyRead"`
+}
+
+// getCollectionConfig retrieves the collection configuration
+// from the supplied file; the supplied file must contain a
+// json-formatted array of collectionConfigJSON elements
+func getCollectionConfigFromFile(ccFile string) ([]byte, error) {
+	fileBytes, err := ioutil.ReadFile(ccFile)
+	if err != nil {
+		return nil, errors.Wrapf(err, "could not read file '%s'", ccFile)
+	}
+
+	return getCollectionConfigFromBytes(fileBytes)
+}
+
+// getCollectionConfig retrieves the collection configuration
+// from the supplied byte array; the byte array must contain a
+// json-formatted array of collectionConfigJSON elements
+func getCollectionConfigFromBytes(cconfBytes []byte) ([]byte, error) {
+	cconf := &[]collectionConfigJSON{}
+	err := json.Unmarshal(cconfBytes, cconf)
+	if err != nil {
+		return nil, errors.Wrap(err, "could not parse the collection configuration")
+	}
+
+	ccarray := make([]*pcommon.CollectionConfig, 0, len(*cconf))
+	for _, cconfitem := range *cconf {
+		p, err := cauthdsl.FromString(cconfitem.Policy)
+		if err != nil {
+			return nil, errors.WithMessage(err, fmt.Sprintf("invalid policy %s", cconfitem.Policy))
+		}
+
+		cpc := &pcommon.CollectionPolicyConfig{
+			Payload: &pcommon.CollectionPolicyConfig_SignaturePolicy{
+				SignaturePolicy: p,
+			},
+		}
+
+		cc := &pcommon.CollectionConfig{
+			Payload: &pcommon.CollectionConfig_StaticCollectionConfig{
+				StaticCollectionConfig: &pcommon.StaticCollectionConfig{
+					Name:              cconfitem.Name,
+					MemberOrgsPolicy:  cpc,
+					RequiredPeerCount: cconfitem.RequiredCount,
+					MaximumPeerCount:  cconfitem.MaxPeerCount,
+					BlockToLive:       cconfitem.BlockToLive,
+					MemberOnlyRead:    cconfitem.MemberOnlyRead,
+				},
+			},
+		}
+
+		ccarray = append(ccarray, cc)
+	}
+
+	ccp := &pcommon.CollectionConfigPackage{Config: ccarray}
+	return proto.Marshal(ccp)
 }
 
 // InvokeOrQuery invokes or queries the chaincode. If successful, the
