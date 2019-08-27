@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/gaeanetwork/gaea-core/common/config"
-	pb "github.com/gaeanetwork/gaea-core/protos/service"
+	"github.com/gaeanetwork/gaea-core/protos/service"
 	"github.com/gaeanetwork/gaea-core/services/transmission"
+	"github.com/gaeanetwork/gaea-core/tee/server"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 )
@@ -39,15 +39,20 @@ func uploadFile(c *gin.Context) {
 	}
 
 	// TODO - packet it in another file
-	conn, err := grpc.Dial(config.GRPCAddr, grpc.WithInsecure())
+	var dialOpts []grpc.DialOption
+	dialOpts = append(dialOpts, grpc.WithInsecure())
+	dialOpts = append(dialOpts, grpc.WithDefaultCallOptions(
+		grpc.MaxCallRecvMsgSize(server.MaxRecvMsgSize),
+		grpc.MaxCallSendMsgSize(server.MaxSendMsgSize)))
+	conn, err := grpc.Dial(server.GRPCAddr, dialOpts...)
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": err.Error()})
 		return
 	}
 	defer conn.Close()
 
-	client := pb.NewTransmissionClient(conn)
-	resp, err := client.UploadFile(c, &pb.UploadFileRequest{Data: data.Bytes()})
+	client := service.NewTransmissionClient(conn)
+	resp, err := client.UploadFile(c, &service.UploadFileRequest{Data: data.Bytes()})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -71,15 +76,20 @@ func downloadFile(c *gin.Context) {
 	}
 
 	// TODO - packet it in another file
-	conn, err := grpc.Dial(config.GRPCAddr, grpc.WithInsecure())
+	var dialOpts []grpc.DialOption
+	dialOpts = append(dialOpts, grpc.WithInsecure())
+	dialOpts = append(dialOpts, grpc.WithDefaultCallOptions(
+		grpc.MaxCallRecvMsgSize(server.MaxRecvMsgSize),
+		grpc.MaxCallSendMsgSize(server.MaxSendMsgSize)))
+	conn, err := grpc.Dial(server.GRPCAddr, dialOpts...)
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": err.Error()})
 		return
 	}
 	defer conn.Close()
 
-	client := pb.NewTransmissionClient(conn)
-	resp, err := client.DownloadFile(c, &pb.DownloadFileRequest{FileId: fileID})
+	client := service.NewTransmissionClient(conn)
+	resp, err := client.DownloadFile(c, &service.DownloadFileRequest{FileId: fileID})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
