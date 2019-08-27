@@ -8,10 +8,9 @@ import (
 	"net/url"
 
 	"github.com/gaeanetwork/gaea-core/protos/service"
+	"github.com/gaeanetwork/gaea-core/services"
 	"github.com/gaeanetwork/gaea-core/services/transmission"
-	"github.com/gaeanetwork/gaea-core/tee/server"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 // RegisterAPI register apis to gin server
@@ -38,13 +37,7 @@ func uploadFile(c *gin.Context) {
 		return
 	}
 
-	// TODO - packet it in another file
-	var dialOpts []grpc.DialOption
-	dialOpts = append(dialOpts, grpc.WithInsecure())
-	dialOpts = append(dialOpts, grpc.WithDefaultCallOptions(
-		grpc.MaxCallRecvMsgSize(server.MaxRecvMsgSize),
-		grpc.MaxCallSendMsgSize(server.MaxSendMsgSize)))
-	conn, err := grpc.Dial(server.GRPCAddr, dialOpts...)
+	conn, err := services.GetGRPCConnection()
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": err.Error()})
 		return
@@ -75,13 +68,7 @@ func downloadFile(c *gin.Context) {
 		return
 	}
 
-	// TODO - packet it in another file
-	var dialOpts []grpc.DialOption
-	dialOpts = append(dialOpts, grpc.WithInsecure())
-	dialOpts = append(dialOpts, grpc.WithDefaultCallOptions(
-		grpc.MaxCallRecvMsgSize(server.MaxRecvMsgSize),
-		grpc.MaxCallSendMsgSize(server.MaxSendMsgSize)))
-	conn, err := grpc.Dial(server.GRPCAddr, dialOpts...)
+	conn, err := services.GetGRPCConnection()
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": err.Error()})
 		return

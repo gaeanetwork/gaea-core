@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/gaeanetwork/gaea-core/smartcontract"
+	"github.com/gaeanetwork/gaea-core/smartcontract/ethereum"
 	"github.com/gaeanetwork/gaea-core/smartcontract/fabric"
 	"github.com/pkg/errors"
 )
@@ -12,13 +13,18 @@ var (
 	// SmartContract service factories
 	smartContractServiceMap = make(map[smartcontract.Platform]smartcontract.Service)
 
-	defaultService         smartcontract.Service
+	// Initialize all the smart contract services
 	defaultServiceInitOnce sync.Once
+	rwMutex                sync.RWMutex
 )
 
 // GetSmartContractService get a registed smart contract service
 func GetSmartContractService(platform smartcontract.Platform) (smartcontract.Service, error) {
+	defaultServiceInitOnce.Do(defaultInitialize)
+
+	rwMutex.RLock()
 	service, exists := smartContractServiceMap[platform]
+	rwMutex.RUnlock()
 	if !exists {
 		return nil, errors.Errorf("Could not find smart contract service, no '%s' provider", platform)
 	}
@@ -26,29 +32,26 @@ func GetSmartContractService(platform smartcontract.Platform) (smartcontract.Ser
 	return service, nil
 }
 
-// InitSmartContractService initialize a smart contract service
-func InitSmartContractService(service smartcontract.Service) {
-	smartContractServiceMap[service.GetPlatform()] = service
+func defaultInitialize() {
+	smartContractServiceMap[smartcontract.Fabric] = &fabric.Chaincode{}
+	smartContractServiceMap[smartcontract.Ethereum] = &ethereum.EVM{}
 }
 
-// GetDefaultSmartContractService get the default smart contract service implemented by the fabric
-func GetDefaultSmartContractService() smartcontract.Service {
-	if defaultService == nil {
-		defaultServiceInitOnce.Do(func() {
-			defaultService = &fabric.Chaincode{}
-			smartContractServiceMap[smartcontract.Fabric] = defaultService
-		})
-	}
+// InitSmartContractService initialize a smart contract service
+func InitSmartContractService(service smartcontract.Service) {
+	defaultServiceInitOnce.Do(defaultInitialize)
 
-	return defaultService
+	rwMutex.Lock()
+	smartContractServiceMap[service.GetPlatform()] = service
+	rwMutex.Unlock()
 }
 
 // DeleteSmartContractService delete this smart contract service
-func DeleteSmartContractService(service smartcontract.Service) {
-	if service != nil {
-		platform := service.GetPlatform()
-		if _, exists := smartContractServiceMap[platform]; exists {
-			delete(smartContractServiceMap, platform)
-		}
+func DeleteSmartContractService(platform smartcontract.Platform) {
+	rwMutex.Lock()
+	defer rwMutex.Unlock()
+
+	if _, exists := smartContractServiceMap[platform]; exists {
+		delete(smartContractServiceMap, platform)
 	}
 }
