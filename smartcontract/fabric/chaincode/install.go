@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/cmd"
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric/core/common/ccpackage"
 	"github.com/hyperledger/fabric/core/common/ccprovider"
@@ -12,8 +13,6 @@ import (
 	"github.com/hyperledger/fabric/protos/utils"
 	"github.com/pkg/errors"
 )
-
-const installCmdName = "install"
 
 const installDesc = "Package the specified chaincode into a deployment spec and save it on the peer's path."
 
@@ -33,7 +32,7 @@ func install(cfg *Config, ccpackfile []byte) error {
 	return chaincodeInstall(ccpackmsg, cf)
 }
 
-func chaincodeInstall(msg proto.Message, cf *ChaincodeCmdFactory) error {
+func chaincodeInstall(msg proto.Message, cf *cmd.ChaincodeCmdFactory) error {
 	creator, err := cf.Signer.Serialize()
 	if err != nil {
 		return fmt.Errorf("Error serializing identity for %s: %s", cf.Signer.GetIdentifier(), err)

@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/cmd"
 	protcommon "github.com/hyperledger/fabric/protos/common"
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/hyperledger/fabric/protos/utils"
 )
-
-const instantiateCmdName = "instantiate"
 
 const instantiateDesc = "Deploy the specified chaincode to the network."
 
@@ -34,7 +33,7 @@ func instantiate(cfg *Config) error {
 }
 
 //instantiate the command via Endorser
-func chaincodeDeploy(cf *ChaincodeCmdFactory, cfg *Config) (*protcommon.Envelope, error) {
+func chaincodeDeploy(cf *cmd.ChaincodeCmdFactory, cfg *Config) (*protcommon.Envelope, error) {
 	spec, err := cfg.CreateChaincodeSpec()
 	if err != nil {
 		return nil, err
