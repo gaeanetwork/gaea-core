@@ -6,6 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/gaeanetwork/gaea-core/common"
+	"github.com/gaeanetwork/gaea-core/common/config"
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/cmd"
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric/common/cauthdsl"
 	"github.com/hyperledger/fabric/core/common/ccpackage"
@@ -14,11 +17,8 @@ import (
 	pcommon "github.com/hyperledger/fabric/protos/common"
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/pkg/errors"
-	"gitlab.com/jaderabbit/go-rabbit/common"
-	"gitlab.com/jaderabbit/go-rabbit/core/config"
 )
 
-const packageCmdName = "package"
 const packageDesc = "Package the specified chaincode into a deployment spec."
 
 func chaincodePackage(cfg *Config) error {
@@ -76,7 +76,7 @@ func chaincodePackage(cfg *Config) error {
 
 //getChaincodeInstallPackage returns either a raw ChaincodeDeploymentSpec or
 //a Envelope with ChaincodeDeploymentSpec and (optional) signature
-func getChaincodeInstallPackage(cds *pb.ChaincodeDeploymentSpec, cf *ChaincodeCmdFactory) ([]byte, error) {
+func getChaincodeInstallPackage(cds *pb.ChaincodeDeploymentSpec, cf *cmd.ChaincodeCmdFactory) ([]byte, error) {
 	//this can be raw ChaincodeDeploymentSpec or Envelope with signatures
 	var objToWrite proto.Message
 
@@ -126,6 +126,7 @@ func getInstantiationPolicy(policy string) (*pcommon.SignaturePolicyEnvelope, er
 	return p, nil
 }
 
+// GetChaincodePackagePath get chaincdoe package path
 func GetChaincodePackagePath() (string, error) {
 	chaincodepath := filepath.Join(config.GetConfigPath(), "chaincodepack")
 	if !common.FileOrFolderExists(chaincodepath) {

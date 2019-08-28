@@ -1,5 +1,5 @@
 core:
-  ListenAddr: 0.0.0.0:12666
+    ListenAddr: 0.0.0.0:12666
 	GRPCAddr: 0.0.0.0:12667
 	ProfileEnabled: false
 	PProfAddr: 0.0.0.0:12668
@@ -30,3 +30,4 @@ chaincodeList:
         queryRaw: false
         queryHex: false
         orderingEndpoint: 127.0.0.1:7050
+        

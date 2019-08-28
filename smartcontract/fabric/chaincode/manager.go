@@ -33,6 +33,7 @@ const (
 // RabbitChaincode used as an attribute in chaincode struct, for example:gitlab.com/jaderabbit/chaincode/example
 type RabbitChaincode struct{}
 
+// ReviewChaincode review chaincode
 type ReviewChaincode struct {
 	Reviewers   map[string]*reviewer `json:"reviewers,omitempty"`
 	CreatorMsp  string               `json:"creator,omitempty"`
