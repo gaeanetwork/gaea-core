@@ -11,13 +11,17 @@ import (
 	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/client"
 	"github.com/gogo/protobuf/proto"
 	"github.com/hyperledger/fabric/common/cauthdsl"
+	"github.com/hyperledger/fabric/core/chaincode"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric/core/container"
 	"github.com/hyperledger/fabric/msp"
 	"github.com/hyperledger/fabric/peer/common"
 	pcommon "github.com/hyperledger/fabric/protos/common"
 	"github.com/hyperledger/fabric/protos/peer"
+	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/hyperledger/fabric/protos/utils"
 	"github.com/pkg/errors"
+	"github.com/qqtou/viper"
 )
 
 func chaincodeInvokeOrQuery(invoke bool, cf *cmd.ChaincodeCmdFactory, cfg *Config) (result string, err error) {
@@ -311,4 +315,163 @@ func InvokeOrQuery(
 	}
 
 	return proposalResp, nil
+}
+
+// InitCmdFactory init the ChaincodeCmdFactory with default clients
+func InitCmdFactory(isEndorserRequired, isOrdererRequired bool, cfg *Config) (*cmd.ChaincodeCmdFactory, error) {
+	var err error
+	var endorserClients []*client.EndorserClient
+	var deliverClients []*client.DeliverClient
+	if isEndorserRequired {
+		if err = validatePeerConnectionParameters(cfg); err != nil {
+			return nil, errors.WithMessage(err, "error validating peer connection parameters")
+		}
+
+		if endorserClients, deliverClients, err = getEndorserAndDeliverClients(cfg); err != nil {
+			return nil, errors.WithMessage(err, "error getting endorser and deliver clients")
+		}
+	}
+
+	certificate, err := common.GetCertificateFnc()
+	if err != nil {
+		return nil, errors.WithMessage(err, "error getting client cerificate")
+	}
+
+	signer, err := common.GetDefaultSignerFnc()
+	if err != nil {
+		return nil, errors.WithMessage(err, "error getting default signer")
+	}
+
+	var broadcastClient *client.BroadcastClient
+	if isOrdererRequired {
+		if len(common.OrderingEndpoint) == 0 {
+			if len(endorserClients) == 0 {
+				return nil, errors.New("orderer is required, but no ordering endpoint or endorser client supplied")
+			}
+			endorserClient := endorserClients[0]
+
+			orderingEndpoints, err := common.GetOrdererEndpointOfChainFnc(cfg.ChannelID, signer, endorserClient)
+			if err != nil {
+				return nil, errors.WithMessage(err, fmt.Sprintf("error getting channel (%s) orderer endpoint", cfg.ChannelID))
+			}
+			if len(orderingEndpoints) == 0 {
+				return nil, errors.Errorf("no orderer endpoints retrieved for channel %s", cfg.ChannelID)
+			}
+			logger.Infof("Retrieved channel (%s) orderer endpoint: %s", cfg.ChannelID, orderingEndpoints[0])
+			// override viper env, check value first before set it, otherwise will fatal on "concurrent map read and map write"
+			if viper.Get("orderer.address") != orderingEndpoints[0] {
+				viper.Set("orderer.address", orderingEndpoints[0])
+			}
+		}
+
+		broadcastClient, err = client.NewBroadcastClient()
+		if err != nil {
+			return nil, errors.WithMessage(err, "error getting broadcast client")
+		}
+	}
+	return &cmd.ChaincodeCmdFactory{
+		EndorserClients: endorserClients,
+		DeliverClients:  deliverClients,
+		Signer:          signer,
+		BroadcastClient: broadcastClient,
+		Certificate:     certificate,
+	}, nil
+}
+
+func validatePeerConnectionParameters(cfg *Config) error {
+	connectionProfile := cfg.ConnectionProfile
+	if connectionProfile != common.UndefinedParamValue {
+		networkConfig, err := common.GetConfig(connectionProfile)
+		if err != nil {
+			return err
+		}
+
+		if len(networkConfig.Channels[cfg.ChannelID].Peers) != 0 {
+			for peer, peerChannelConfig := range networkConfig.Channels[cfg.ChannelID].Peers {
+				if peerChannelConfig.EndorsingPeer {
+					peerConfig, ok := networkConfig.Peers[peer]
+					if !ok {
+						return errors.Errorf("peer '%s' is defined in the channel config but doesn't have associated peer config", peer)
+					}
+					cfg.PeerAddresses = append(cfg.PeerAddresses, peerConfig.URL)
+					cfg.TLSRootCertFiles = append(cfg.TLSRootCertFiles, peerConfig.TLSCACerts.Path)
+				}
+			}
+		}
+	}
+
+	peerAddresses, tlsRootCertFiles, cmdName := cfg.PeerAddresses, cfg.TLSRootCertFiles, cfg.CommandName
+	// currently only support multiple peer addresses for invoke
+	if cmdName != "invoke" && len(peerAddresses) > 1 {
+		return errors.Errorf("'%s' command can only be executed against one peer. received %d", cmdName, len(peerAddresses))
+	}
+
+	if len(tlsRootCertFiles) > len(peerAddresses) {
+		logger.Warningf("received more TLS root cert files (%d) than peer addresses (%d)", len(tlsRootCertFiles), len(peerAddresses))
+	}
+
+	if viper.GetBool("peer.tls.enabled") {
+		if len(tlsRootCertFiles) != len(peerAddresses) {
+			return errors.Errorf("number of peer addresses (%d) does not match the number of TLS root cert files (%d)", len(peerAddresses), len(tlsRootCertFiles))
+		}
+	} else {
+		tlsRootCertFiles = nil
+	}
+
+	return nil
+}
+
+func getEndorserAndDeliverClients(cfg *Config) ([]*client.EndorserClient, []*client.DeliverClient, error) {
+	var err error
+	var endorserClients []*client.EndorserClient
+	var deliverClients []*client.DeliverClient
+	for i, address := range cfg.PeerAddresses {
+		var tlsRootCertFile string
+		if cfg.TLSRootCertFiles != nil {
+			tlsRootCertFile = cfg.TLSRootCertFiles[i]
+		}
+		endorserClient, err := client.GetEndorserClient(address, tlsRootCertFile)
+		if err != nil {
+			return nil, nil, errors.WithMessage(err, fmt.Sprintf("error getting endorser client for %s", cfg.CommandName))
+		}
+		endorserClients = append(endorserClients, endorserClient)
+		deliverClient, err := client.GetDeliverClient(address, tlsRootCertFile)
+		if err != nil {
+			return nil, nil, errors.WithMessage(err, fmt.Sprintf("error getting deliver client for %s", cfg.CommandName))
+		}
+		deliverClients = append(deliverClients, deliverClient)
+	}
+	if len(endorserClients) == 0 {
+		return nil, nil, errors.New("no endorser clients retrieved - this might indicate a bug")
+	}
+	return endorserClients, deliverClients, err
+}
+
+// getChaincodeDeploymentSpec get chaincode deployment spec given the chaincode spec
+func getChaincodeDeploymentSpec(spec *pb.ChaincodeSpec, crtPkg bool) (*pb.ChaincodeDeploymentSpec, error) {
+	var codePackageBytes []byte
+	if chaincode.IsDevMode() == false && crtPkg {
+		var err error
+		if err = checkSpec(spec); err != nil {
+			return nil, err
+		}
+
+		codePackageBytes, err = container.GetChaincodePackageBytes(platformRegistry, spec)
+		if err != nil {
+			err = errors.WithMessage(err, "error getting chaincode package bytes")
+			return nil, err
+		}
+	}
+	chaincodeDeploymentSpec := &pb.ChaincodeDeploymentSpec{ChaincodeSpec: spec, CodePackage: codePackageBytes}
+	return chaincodeDeploymentSpec, nil
+}
+
+// checkSpec to see if chaincode resides within current package capture for language.
+func checkSpec(spec *pb.ChaincodeSpec) error {
+	// Don't allow nil value
+	if spec == nil {
+		return errors.New("expected chaincode specification, nil received")
+	}
+
+	return platformRegistry.ValidateSpec(spec.CCType(), spec.Path())
 }

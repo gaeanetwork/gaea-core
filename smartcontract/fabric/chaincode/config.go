@@ -10,6 +10,11 @@ import (
 	"github.com/gaeanetwork/gaea-core/common"
 	"github.com/gogo/protobuf/proto"
 	"github.com/hyperledger/fabric/common/flogging"
+	"github.com/hyperledger/fabric/core/chaincode/platforms"
+	"github.com/hyperledger/fabric/core/chaincode/platforms/car"
+	"github.com/hyperledger/fabric/core/chaincode/platforms/golang"
+	"github.com/hyperledger/fabric/core/chaincode/platforms/java"
+	"github.com/hyperledger/fabric/core/chaincode/platforms/node"
 	"github.com/hyperledger/fabric/core/container/ccintf"
 	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/pkg/errors"
@@ -27,6 +32,17 @@ var (
 	rwMutex   sync.RWMutex
 	mapConfig = map[string]*Config{}
 	logger    = flogging.MustGetLogger("chaincodeCmd")
+)
+
+// XXX This is a terrible singleton hack, however
+// it simply making a latent dependency explicit.
+// It should be removed along with the other package
+// scoped variables
+var platformRegistry = platforms.NewRegistry(
+	&golang.Platform{},
+	&car.Platform{},
+	&java.Platform{},
+	&node.Platform{},
 )
 
 // Config for chaincode
@@ -79,6 +95,19 @@ func (cfg *Config) CreateChaincodeSpec() (*peer.ChaincodeSpec, error) {
 		ChaincodeId: &peer.ChaincodeID{Path: cfg.ChaincodePath, Name: cfg.ChaincodeName, Version: cfg.ChaincodeVersion},
 		Input:       &peer.ChaincodeInput{Args: common.ConvertArrayStringToByte(cfg.ChaincodeInput)},
 	}, nil
+}
+
+// ReadViperConfiguration for initialization
+func ReadViperConfiguration() error {
+	rwMutex.Lock()
+	defer rwMutex.Unlock()
+
+	if err := viper.UnmarshalKey("chaincodeList", &mapConfig); err != nil {
+		return fmt.Errorf("Could not Unmarshal %s YAML config, err: %v", "chaincodeList", err)
+	}
+
+	logger.Debugf("Initialize the default chaincode Config:%v", mapConfig)
+	return nil
 }
 
 // GetConfig get the config by chaincode name, initialize if it is nil
