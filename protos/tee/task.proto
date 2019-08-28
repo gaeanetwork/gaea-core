@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+/**
+    protoc -I=. --go_out=. task.proto
+*/
+// option go_package = "github.com/gaeanetwork/gaea-core/protos/tee";
+
+package tee;
+
+message Task {
+    string id = 1;
+    repeated string data_id = 2;
+    string algorithm_id = 3;
+    int32 container_type = 4;
+    string result_address = 5;
+    map<string, string> data_notifactions = 6;
+    int64 create_seconds = 7;
+    int64 update_seconds = 8;
+    EvidenceHash evidence = 9;
+    map<string, bool> partners = 10;
+    string executor = 11;
+}
+
+message EvidenceHash {
+    repeated string data = 1;
+    string algorithm = 2;
+    string result = 3;
+    string execution_log = 4;
+}
