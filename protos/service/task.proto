@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+/**
+    cd $GOPATH/src
+    protoc -I=. --go_out=plugins=grpc:. github.com/gaeanetwork/gaea-core/protos/service/task.proto
+*/
+option go_package = "github.com/gaeanetwork/gaea-core/protos/service";
+
+package service;
+
+import "github.com/gaeanetwork/gaea-core/protos/tee/task.proto";
+
+service Task {
+    rpc Create (CreateRequest) returns (CreateResponse);
+    rpc QueryTaskByID (QueryTaskByIDRequest) returns (QueryTaskByIDResponse);
+}
+
+message CreateRequest {
+    repeated string data_id = 1;
+    string algorithm_id = 2;
+    string result_address = 3;
+}
+
+message CreateResponse {
+    string task_id = 1;
+}
+
+message QueryTaskByIDRequest {
+    string task_id = 1;
+}
+
+message QueryTaskByIDResponse {
+    tee.Task task = 1;
+}
