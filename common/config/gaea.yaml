@@ -1,0 +1,32 @@
+core:
+  ListenAddr: 0.0.0.0:12666
+	GRPCAddr: 0.0.0.0:12667
+	ProfileEnabled: false
+	PProfAddr: 0.0.0.0:12668
+
+tee:
+    # the default file storage location for transmission services
+    location: /tmp/data/files/
+    # 4 * 1024 * 1024 = 4MB
+    maxFileSize: 4194304
+
+chaincodeList:
+    tee_data:
+        language: golang
+        path: gitlab.com/jaderabbit/go-rabbit/chaincode/tee/core
+        name: tee_data
+        version: "1.0"
+        channelID: syschannel
+        queryRaw: false
+        queryHex: false
+        orderingEndpoint: 127.0.0.1:7050
+
+    tee_exec:
+        language: golang
+        path: gitlab.com/jaderabbit/go-rabbit/chaincode/tee/task
+        name: tee_exec
+        version: "1.0"
+        channelID: syschannel
+        queryRaw: false
+        queryHex: false
+        orderingEndpoint: 127.0.0.1:7050
