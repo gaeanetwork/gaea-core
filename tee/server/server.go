@@ -3,23 +3,11 @@ package server
 import (
 	"net"
 
-	pb "github.com/gaeanetwork/gaea-core/protos/service"
+	"github.com/gaeanetwork/gaea-core/protos/service"
+	"github.com/gaeanetwork/gaea-core/services/shareddata"
 	"github.com/gaeanetwork/gaea-core/services/transmission"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
-)
-
-// variables
-var (
-	// TODO - read in config
-	ListenAddr     = ":12666"
-	GRPCAddr       = ":12667"
-	PProfAddr      = ":12668"
-	ProfileEnabled = false
-
-	// Max send and receive bytes for grpc clients and servers
-	MaxRecvMsgSize = 100 * 1024 * 1024
-	MaxSendMsgSize = 100 * 1024 * 1024
 )
 
 // TeeServer for tee services
@@ -31,7 +19,9 @@ type TeeServer struct {
 // NewTeeServer create a tee server by address
 func NewTeeServer(address string) *TeeServer {
 	grpcServer := grpc.NewServer()
-	pb.RegisterTransmissionServer(grpcServer, transmission.NewTransmissionService())
+	service.RegisterTransmissionServer(grpcServer, transmission.NewTransmissionService())
+	service.RegisterSharedDataServer(grpcServer, shareddata.NewSharedDataService())
+
 	return &TeeServer{address: address, server: grpcServer}
 }
 
