@@ -3,9 +3,8 @@ package task
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/gaeanetwork/gaea-core/protos/service"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_Create(t *testing.T) {
@@ -23,4 +22,9 @@ func Test_Create(t *testing.T) {
 	resp, err := sdService.Create(nil, req)
 	assert.NoError(t, err)
 	assert.NotNil(t, resp.TaskId)
+
+	// Invalid request - dataId empty
+	req.DataId = nil
+	_, err = sdService.Create(nil, req)
+	assert.Error(t, err, "data id are non-empty")
 }

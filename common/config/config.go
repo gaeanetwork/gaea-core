@@ -1,12 +1,10 @@
 package config
 
 import (
-	"fmt"
 	"os"
-	"strings"
 
 	"github.com/gaeanetwork/gaea-core/common"
-	"github.com/pkg/errors"
+	"github.com/hyperledger/fabric/common/flogging"
 	"github.com/spf13/viper"
 )
 
@@ -34,76 +32,57 @@ const (
 	configFileName = "gaea"
 )
 
-// InitConfig initialize fileName.yaml configuration into viper
-func InitConfig(v *viper.Viper, fileName string) error {
-	err := InitViper(v, fileName)
-	if err != nil {
-		return err
-	}
+var (
+	configDir string
 
-	// Find and read the config file, handle errors reading the config file
-	if err = v.ReadInConfig(); err != nil {
-		// The version of Viper we use claims the config type isn't supported when in fact the file hasn't been found
-		// Display a more helpful message to avoid confusing the user.
-		if strings.Contains(fmt.Sprint(err), "Unsupported Config Type") {
-			return errors.New(fmt.Sprintf("Could not find config file. "+
-				"Please make sure that %s is set to a path "+
-				"which contains %s.yaml", EnvName, fileName))
-		}
+	logger = flogging.MustGetLogger("Core.Config")
 
-		return errors.WithMessage(err, fmt.Sprintf("error when reading %s.yaml config file", fileName))
-	}
+	gaeaViper *viper.Viper
+	// DefaultConfig for go-rabbit
+	DefaultConfig *Config
+)
 
-	return nil
+// Config for go-rabbit
+type Config struct {
+	ListenAddr     string `mapstructure:"ListenAddr" yaml:"ListenAddr"`
+	GRPCAddr       string `mapstructure:"GRPCAddr" yaml:"GRPCAddr"`
+	PProfAddr      string `mapstructure:"ProfileEnabled" yaml:"ProfileEnabled"`
+	ProfileEnabled string `mapstructure:"ProfileEnabled" yaml:"ProfileEnabled"`
 }
 
-// InitViper performs basic initialization of our viper-based configuration layer.
-// Primary thrust is to establish the paths that should be consulted to find
-// the configuration we need. If v == nil, we will initialize the global
-// Viper instance
-func InitViper(v *viper.Viper, configName string) error {
-	var altPath = os.Getenv(EnvName)
-	if altPath != "" {
-		// If the user has overridden the path with an envvar, its the only path
-		// we will consider
-
-		if !common.FileOrFolderExists(altPath) {
-			return fmt.Errorf("%s %s does not exist", EnvName, altPath)
-		}
-
-		AddConfigPath(v, altPath)
-	} else {
-		// If we get here, we should use the default paths in priority order:
-		//
-		// *) CWD
-		// *) /etc/hyperledger/fabric
-
-		// CWD
-		AddConfigPath(v, CurrentPath)
-
-		// And finally, the official path
-		if common.FileOrFolderExists(OfficialPath) {
-			AddConfigPath(v, OfficialPath)
-		}
+// Initialize read the rabbit.yaml configuration
+func Initialize() {
+	var ok bool
+	configDir, ok = os.LookupEnv(EnvName)
+	if !ok {
+		logger.Panicf("the environment variable %s is not set", EnvName)
 	}
 
-	// Now set the configuration file.
-	if v != nil {
-		v.SetConfigName(configName)
-	} else {
-		viper.SetConfigName(configName)
+	if !common.FileOrFolderExists(configDir) {
+		logger.Panicf("path:%s not found", configDir)
 	}
 
-	return nil
+	gaeaViper = viper.New()
+	if err := InitConfig(gaeaViper, configFileName); err != nil {
+		logger.Panicf("Failed to initial %s.yaml, err: %v", configFileName, err)
+	}
+
+	readConfigConfiguration()
 }
 
-// AddConfigPath add a path for Viper to search for the config file in.
-// Can be called multiple times to define multiple search paths. If v == nil,
-// we will initialize the global Viper instance
-func AddConfigPath(v *viper.Viper, p string) {
-	if v != nil {
-		v.AddConfigPath(p)
-	} else {
-		viper.AddConfigPath(p)
+func readConfigConfiguration() {
+	if err := gaeaViper.UnmarshalKey("core", &DefaultConfig); err != nil {
+		logger.Errorf("Could not Unmarshal %s YAML config, err: %v", "orderingEndpoint", err)
+		return
 	}
+}
+
+// GetGaeaViper contains the gaea.yaml configuration
+func GetGaeaViper() *viper.Viper {
+	return gaeaViper
+}
+
+// GetConfigPath get config path
+func GetConfigPath() string {
+	return configDir
 }

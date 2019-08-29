@@ -33,7 +33,7 @@ func (s *Service) Create(ctx context.Context, req *service.CreateRequest) (*serv
 		return nil, errors.Errorf("data id are non-empty")
 	}
 
-	ids, err := json.Marshal(req.DataIDs)
+	ids, err := json.Marshal(req.DataId)
 	if err != nil {
 		return nil, err
 	}
