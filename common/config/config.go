@@ -46,8 +46,8 @@ var (
 type Config struct {
 	ListenAddr     string `mapstructure:"ListenAddr" yaml:"ListenAddr"`
 	GRPCAddr       string `mapstructure:"GRPCAddr" yaml:"GRPCAddr"`
-	PProfAddr      string `mapstructure:"ProfileEnabled" yaml:"ProfileEnabled"`
-	ProfileEnabled string `mapstructure:"ProfileEnabled" yaml:"ProfileEnabled"`
+	PProfAddr      string `mapstructure:"PProfAddr" yaml:"PProfAddr"`
+	ProfileEnabled bool   `mapstructure:"ProfileEnabled" yaml:"ProfileEnabled"`
 }
 
 // Initialize read the rabbit.yaml configuration

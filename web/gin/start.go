@@ -23,6 +23,8 @@ import (
 
 // Start gin web http
 func Start() {
+	config.Initialize()
+
 	r := setupRouter()
 	go factory.InitSmartContractService(&fabric.Chaincode{})
 	go server.NewTeeServer(config.GRPCAddr).Start()
