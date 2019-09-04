@@ -3,9 +3,9 @@ package chaincode
 import (
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/hyperledger/fabric/peer/common"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/core/config"
 )
 
 func Test_SignPackage(t *testing.T) {

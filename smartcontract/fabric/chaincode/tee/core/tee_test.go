@@ -2,7 +2,7 @@ package main
 
 /*
     ============================ Deploy tee chaincode ============================
-	./peer chaincode package teepack.out -n tee_data -v 1.0 -s -S -p gitlab.com/jaderabbit/go-rabbit/chaincode/tee/core
+	./peer chaincode package teepack.out -n tee_data -v 1.0 -s -S -p github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/tee/core
 	mkdir $HOME/chaincodes/tee
 	mv -fv teepack.out $HOME/chaincodes/tee/teepack.out
 
@@ -27,16 +27,17 @@ package main
 */
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/common"
+	"github.com/gaeanetwork/gaea-core/crypto/ecc"
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/chaincode"
-	"gitlab.com/jaderabbit/go-rabbit/common"
-	"gitlab.com/jaderabbit/go-rabbit/common/crypto/ecc"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
 )
 
 func Test_Init(t *testing.T) {
@@ -80,7 +81,7 @@ func uploadData(t *testing.T, stub *shim.MockStub, txID string) pb.Response {
 
 	preArgs := []string{"Ciphertext", "Hash", "Description", PubHexForTest}
 	hash, signatures := getHashAndSignatures(t, preArgs)
-	response1 := stub.MockInvoke("txID", [][]byte{[]byte(tee.MethodUpload), []byte("Ciphertext"), []byte("Hash"), []byte("Description"), []byte(PubHexForTest), []byte(common.BytesToHex(hash)), signatures})
+	response1 := stub.MockInvoke("txID", [][]byte{[]byte(tee.MethodUpload), []byte("Ciphertext"), []byte("Hash"), []byte("Description"), []byte(PubHexForTest), []byte(hex.EncodeToString(hash)), signatures})
 	assert.Equal(t, shim.OK, int(response1.Status))
 	assert.Empty(t, response1.Message)
 	assert.NotNil(t, response1.Payload)
@@ -163,7 +164,7 @@ func updateData(t *testing.T, stub *shim.MockStub) {
 
 	preArgs := []string{"1", "Ciphertext1", "Summary1", "Description1"}
 	hash, signatures := getHashAndSignatures(t, preArgs)
-	args1 := [][]byte{[]byte(tee.MethodUpdate), []byte("1"), []byte("Ciphertext1"), []byte("Summary1"), []byte("Description1"), []byte(common.BytesToHex(hash)), signatures}
+	args1 := [][]byte{[]byte(tee.MethodUpdate), []byte("1"), []byte("Ciphertext1"), []byte("Summary1"), []byte("Description1"), []byte(hex.EncodeToString(hash)), signatures}
 	response1 := stub.MockInvoke(tee.MethodUpdate, args1)
 	assert.Equal(t, shim.OK, int(response1.Status))
 	assert.Empty(t, response1.Message)
@@ -259,7 +260,11 @@ func getEmptySigs(t *testing.T) []byte {
 
 func getHashAndSignatures(t *testing.T, args []string) ([]byte, []byte) {
 	hash := chaincode.GetArgsHashBytes(args)
-	signature, err := ecc.SignECDSA(PrivHexForTest, hash)
+	privBytes, err := common.HexToBytes(PrivHexForTest)
+	if err != nil {
+		t.Fatal(err)
+	}
+	signature, err := ecc.SignECDSA(privBytes, hash)
 	assert.NoError(t, err)
 
 	sigs := []string{signature}

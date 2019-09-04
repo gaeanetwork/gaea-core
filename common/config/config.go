@@ -38,11 +38,11 @@ var (
 	logger = flogging.MustGetLogger("Core.Config")
 
 	gaeaViper *viper.Viper
-	// DefaultConfig for go-rabbit
+	// DefaultConfig for gaea-core
 	DefaultConfig *Config
 )
 
-// Config for go-rabbit
+// Config for gaea-core
 type Config struct {
 	ListenAddr     string `mapstructure:"ListenAddr" yaml:"ListenAddr"`
 	GRPCAddr       string `mapstructure:"GRPCAddr" yaml:"GRPCAddr"`

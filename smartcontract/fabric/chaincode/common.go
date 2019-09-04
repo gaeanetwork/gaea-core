@@ -21,7 +21,7 @@ import (
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/hyperledger/fabric/protos/utils"
 	"github.com/pkg/errors"
-	"github.com/qqtou/viper"
+	"github.com/spf13/viper"
 )
 
 func chaincodeInvokeOrQuery(invoke bool, cf *cmd.ChaincodeCmdFactory, cfg *Config) (result string, err error) {

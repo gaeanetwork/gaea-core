@@ -1,7 +1,7 @@
 package main
 
 import (
-	beegoserver "github.com/gaeanetwork/gaea-core/web/beego"
+	beegoserver "github.com/gaeanetwork/gaea-core/api/beego"
 	ginserver "github.com/gaeanetwork/gaea-core/web/gin"
 )
 

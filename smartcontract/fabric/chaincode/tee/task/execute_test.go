@@ -1,18 +1,18 @@
 package main
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 	"os"
 	"testing"
 
 	docker "github.com/fsouza/go-dockerclient"
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/gaeanetwork/gaea-core/tee"
+	"github.com/gaeanetwork/gaea-core/tee/task"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/chaincode"
-	"gitlab.com/jaderabbit/go-rabbit/common"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
-	"gitlab.com/jaderabbit/go-rabbit/tee/task"
 )
 
 func Test_execute(t *testing.T) {
@@ -61,15 +61,17 @@ func Test_executeSignature(t *testing.T) {
 
 	// Add sigs
 	args := []string{string(taskID), PubHexForTest, "0"}
-	hash, sigs, err := chaincode.GetArgsHashAndSignatures(PrivHexForTest, args)
+	privBytes, err := hex.DecodeString(PrivHexForTest)
+	assert.NoError(t, err)
+	hash, sigs, err := chaincode.GetArgsHashAndSignatures(privBytes, args)
 	assert.NoError(t, err)
 
-	resp := stub.MockInvoke("3", [][]byte{[]byte(task.MethodExecute), taskID, []byte(PubHexForTest), []byte("0"), []byte(common.BytesToHex(hash)), sigs})
+	resp := stub.MockInvoke("3", [][]byte{[]byte(task.MethodExecute), taskID, []byte(PubHexForTest), []byte("0"), []byte(hex.EncodeToString(hash)), sigs})
 	assert.Equal(t, shim.ERROR, int(resp.Status))
 	assert.Contains(t, resp.Message, "Failed to check request data status")
 
 	// Invalid hash
-	resp1 := stub.MockInvoke("4", [][]byte{[]byte(task.MethodExecute), taskID, []byte(PubHexForTest), []byte("0"), []byte("common.BytesToHex(hash)"), sigs})
+	resp1 := stub.MockInvoke("4", [][]byte{[]byte(task.MethodExecute), taskID, []byte(PubHexForTest), []byte("0"), []byte("hex.EncodeToString(hash)"), sigs})
 	assert.Equal(t, shim.ERROR, int(resp1.Status))
 	assert.Contains(t, resp1.Message, "Failed to verify ecdsa signature")
 
@@ -78,7 +80,7 @@ func Test_executeSignature(t *testing.T) {
 	sigsBytes1, err := json.Marshal(sigs1)
 	assert.NoError(t, err)
 
-	resp2 := stub.MockInvoke("5", [][]byte{[]byte(task.MethodExecute), taskID, []byte(PubHexForTest), []byte("0"), []byte("common.BytesToHex(hash)"), sigsBytes1})
+	resp2 := stub.MockInvoke("5", [][]byte{[]byte(task.MethodExecute), taskID, []byte(PubHexForTest), []byte("0"), []byte("hex.EncodeToString(hash)"), sigsBytes1})
 	assert.Equal(t, shim.ERROR, int(resp2.Status))
 	assert.Contains(t, resp2.Message, "Failed to verify ecdsa signature")
 }

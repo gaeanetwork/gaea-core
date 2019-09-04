@@ -171,7 +171,7 @@ func constructSharedDataRequestArgs(data *tee.SharedData, privHex, requester str
 			return nil, errors.Wrapf(err, "failed to get arguments hash and signatures, args: %v", args)
 		}
 
-		return [][]byte{[]byte("request"), []byte(args[0]), []byte(args[1]), []byte(common.BytesToHex(hash)), sigs}, nil
+		return [][]byte{[]byte("request"), []byte(args[0]), []byte(args[1]), []byte(hex.EncodeToString(hash)), sigs}, nil
 	}
 
 	return [][]byte{[]byte("request"), []byte(args[0]), []byte(args[1])}, nil

@@ -4,9 +4,9 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/hyperledger/fabric/peer/common"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/core/config"
 )
 
 func Test_Install(t *testing.T) {
@@ -19,7 +19,7 @@ func Test_Install(t *testing.T) {
 	common.InitCmd(nil, []string{})
 	common.SetOrdererEnv(nil, []string{})
 
-	ccpackfile, err := ioutil.ReadFile("/home/wff/go/src/gitlab.com/jaderabbit/go-rabbit/project/echain/signeddepartmentpack.out")
+	ccpackfile, err := ioutil.ReadFile("echain/signeddepartmentpack.out")
 	assert.NoError(t, err)
 
 	err = install(conf, ccpackfile)

@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/gaeanetwork/gaea-core/common"
+	"github.com/gaeanetwork/gaea-core/common/config"
 	pb "github.com/gaeanetwork/gaea-core/protos/service"
 	"github.com/pkg/errors"
 )
@@ -32,7 +33,7 @@ type Service struct {
 // NewTransmissionService create a transmission service
 func NewTransmissionService() *Service {
 	// TODO - read in config
-	location, maxFileSize := DefaultLocation, 4*1024*1024
+	location, maxFileSize := DefaultLocation, config.MaxSendMsgSize
 	return &Service{location, maxFileSize}
 }
 

@@ -1,13 +1,14 @@
 package main
 
 import (
+	"encoding/hex"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/common"
+	"github.com/gaeanetwork/gaea-core/crypto"
+	"github.com/gaeanetwork/gaea-core/crypto/ecc"
+	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/common"
-	"gitlab.com/jaderabbit/go-rabbit/common/crypto"
-	"gitlab.com/jaderabbit/go-rabbit/common/crypto/ecc"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
 )
 
 var (
@@ -38,7 +39,7 @@ func Test_decryptDataAddress(t *testing.T) {
 	encryptedKey := getEncryptedKeyForTests(t, aesKeyForTests)
 	ciphertext, err := crypto.AesEncrypt(plaintextForTests, aesKeyForTests)
 	assert.NoError(t, err)
-	dataAddressCiphertext := common.BytesToHex(ciphertext)
+	dataAddressCiphertext := hex.EncodeToString(ciphertext)
 	dataAddressOnlyInfo := &tee.DataInfo{DataStoreAddress: dataAddressCiphertext, EncryptedKey: encryptedKey, EncryptedType: tee.AddressOnly}
 	plaintext, err = decryptDataAddress(stub, dataAddressOnlyInfo)
 	assert.NoError(t, err)
@@ -69,7 +70,7 @@ func Test_decryptDataAddress_Error(t *testing.T) {
 	// Invalid encryptedKey
 	ciphertext, err := crypto.AesEncrypt(plaintextForTests, aesKeyForTests)
 	assert.NoError(t, err)
-	dataAddress := common.BytesToHex(ciphertext)
+	dataAddress := hex.EncodeToString(ciphertext)
 	dataInfo = &tee.DataInfo{DataStoreAddress: dataAddress, EncryptedKey: "encryptedKey", EncryptedType: tee.AddressOnly}
 	_, err = decryptDataAddress(stub, dataInfo)
 	assert.Contains(t, err.Error(), "failed to decrypt encrypted key")
@@ -132,12 +133,12 @@ func Test_decryptData_DataEncrypted(t *testing.T) {
 	ciphertext, err := crypto.AesEncrypt(plaintextForTests, aesKeyForTests)
 	assert.NoError(t, err)
 	dataOnlyInfo := &tee.DataInfo{EncryptedKey: encryptedKey, EncryptedType: tee.DataOnly}
-	plaintext, err := decryptData(stub, []byte(common.BytesToHex(ciphertext)), dataOnlyInfo)
+	plaintext, err := decryptData(stub, []byte(hex.EncodeToString(ciphertext)), dataOnlyInfo)
 	assert.NoError(t, err)
 	assert.Equal(t, plaintextForTests, plaintext)
 
 	dataAllInfo := &tee.DataInfo{EncryptedKey: encryptedKey, EncryptedType: tee.All}
-	plaintext1, err := decryptData(stub, []byte(common.BytesToHex(ciphertext)), dataAllInfo)
+	plaintext1, err := decryptData(stub, []byte(hex.EncodeToString(ciphertext)), dataAllInfo)
 	assert.NoError(t, err)
 	assert.Equal(t, plaintextForTests, plaintext1)
 }
@@ -149,7 +150,7 @@ func Test_decryptData_DataEncrypted_Error(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Invalid format encryptedKey
-	dataInfo := &tee.DataInfo{EncryptedKey: "common.BytesToHex(encryptedKey)", EncryptedType: tee.DataOnly}
+	dataInfo := &tee.DataInfo{EncryptedKey: "hex.EncodeToString(encryptedKey)", EncryptedType: tee.DataOnly}
 	_, err = decryptData(stub, ciphertext, dataInfo)
 	assert.Contains(t, err.Error(), "failed to decrypt encrypted key")
 
@@ -162,7 +163,7 @@ func Test_decryptData_DataEncrypted_Error(t *testing.T) {
 	// Invalid other encryptedKey
 	encryptedKey1 := getEncryptedKeyForTests(t, aesKeyForTests[:1])
 	dataInfo = &tee.DataInfo{EncryptedKey: encryptedKey1, EncryptedType: tee.DataOnly}
-	_, err = decryptData(stub, []byte(common.BytesToHex(ciphertext)), dataInfo)
+	_, err = decryptData(stub, []byte(hex.EncodeToString(ciphertext)), dataInfo)
 	assert.Contains(t, err.Error(), "failed to decrypt ciphertext data by aes algorithm")
 }
 
@@ -171,5 +172,5 @@ func getEncryptedKeyForTests(t *testing.T, aesKey []byte) string {
 	assert.NoError(t, err)
 	encryptedKey, err := ecc.EncryptByECCPublicKey(pubBytes, aesKey)
 	assert.NoError(t, err)
-	return common.BytesToHex(encryptedKey)
+	return hex.EncodeToString(encryptedKey)
 }

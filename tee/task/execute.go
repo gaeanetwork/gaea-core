@@ -25,7 +25,7 @@ import (
 // ExecuteRequest is to execute a task through this request
 type ExecuteRequest struct {
 	TaskID        string `form:"task_id"`
-	Algorithm     []byte `form:"algorithm"`
+	AlgorithmID   string `form:"algorithm_id"`
 	Executor      string `form:"executor"`
 	ContainerType string `form:"container_type"`
 	Hash          string `form:"hash"`
@@ -44,7 +44,7 @@ func Execute(req *ExecuteRequest) (string, error) {
 		return "", errors.Wrapf(err, "Tee task cannot found, taskID: %v", req.TaskID)
 	}
 
-	if err = uploadToTeetaskContainer(containerName, teetask); err != nil {
+	if err = uploadToTeetaskContainer(containerName, req.AlgorithmID, teetask); err != nil {
 		return "", errors.Wrapf(err, "failed to upload to tee task container, address: %v", teetask.ResultAddress)
 	}
 
@@ -80,20 +80,15 @@ func GetContainerName(chaincodeName string) (string, error) {
 	return chaincode.GetContainerName(definition.CCName(), definition.CCVersion()), nil
 }
 
-func uploadToTeetaskContainer(containerName string, teetask *tee.Task) error {
+func uploadToTeetaskContainer(containerName, algorithmID string, teetask *tee.Task) error {
 	// Get data and algorithm byte slice
 	filesToUpload, err := getDataToUpload(teetask)
 	if err != nil {
 		return errors.Wrap(err, "failed to get files to upload")
 	}
 
-	// filesToUpload[filepath.Join(teetask.ResultAddress, AlgorithmName)] = algorithm
-	algorithmData, err := tee.GetData(teetask.AlgorithmID)
-	if err != nil {
-		return errors.Wrapf(err, "failed to get algorithm data, id: %s", teetask.AlgorithmID)
-	}
-	// TODO - userDir := filepath.Join(transmission.DefaultLocation, algorithmData.Owner)
-	fileDir := filepath.Join(transmission.DefaultLocation, algorithmData.ID)
+	// TODO - userDir := filepath.Join(transmission.DefaultLocation, algorithmData.Owner, algorithmID)
+	fileDir := filepath.Join(transmission.DefaultLocation, algorithmID)
 	algorithm, err := ioutil.ReadFile(fileDir)
 	if err != nil {
 		return errors.Wrapf(err, "failed to read algorithm file, path: %s", fileDir)

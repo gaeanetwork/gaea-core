@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
 )
 
 // key pair for test

@@ -13,7 +13,7 @@ tee:
 chaincodeList:
     tee_data:
         language: golang
-        path: gitlab.com/jaderabbit/go-rabbit/chaincode/tee/core
+        path: github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/tee/core
         name: tee_data
         version: "1.0"
         channelID: syschannel
@@ -23,7 +23,7 @@ chaincodeList:
 
     tee_exec:
         language: golang
-        path: gitlab.com/jaderabbit/go-rabbit/chaincode/tee/task
+        path: github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/tee/task
         name: tee_exec
         version: "1.0"
         channelID: syschannel

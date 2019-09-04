@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/common"
+	"github.com/gaeanetwork/gaea-core/crypto/ecc"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/common"
-	"gitlab.com/jaderabbit/go-rabbit/common/crypto/ecc"
 )
 
 // test it after download data
