@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"strings"
 
+	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
 )
 
 // key pair for test

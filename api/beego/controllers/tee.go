@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	"github.com/astaxie/beego"
-	"gitlab.com/jaderabbit/go-rabbit/chaincode"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/gaeanetwork/gaea-core/tee"
 )
 
 // SharedDataController for sharing data uploads, updates, requests, authorizations, and various queries

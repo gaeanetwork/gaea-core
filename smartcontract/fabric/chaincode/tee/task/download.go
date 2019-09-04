@@ -9,13 +9,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/gaeanetwork/gaea-core/crypto"
+	"github.com/gaeanetwork/gaea-core/tee"
+	"github.com/gaeanetwork/gaea-core/tee/pipeline"
+	"github.com/gaeanetwork/gaea-core/tee/storage/azurehelper"
+	"github.com/gaeanetwork/gaea-core/tee/task"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/pkg/errors"
-	"gitlab.com/jaderabbit/go-rabbit/common/crypto"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
-	"gitlab.com/jaderabbit/go-rabbit/tee/pipeline"
-	"gitlab.com/jaderabbit/go-rabbit/tee/storage/azurehelper"
-	"gitlab.com/jaderabbit/go-rabbit/tee/task"
 )
 
 // DownloadData if the the request status is authorized, download the data

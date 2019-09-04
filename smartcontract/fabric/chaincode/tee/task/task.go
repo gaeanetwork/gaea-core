@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/gaeanetwork/gaea-core/tee"
+	"github.com/gaeanetwork/gaea-core/tee/task"
 	"github.com/hyperledger/fabric/common/flogging"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/pkg/errors"
-	"gitlab.com/jaderabbit/go-rabbit/chaincode"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
-	"gitlab.com/jaderabbit/go-rabbit/tee/task"
 )
 
 var (

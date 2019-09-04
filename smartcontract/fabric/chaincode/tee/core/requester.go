@@ -5,11 +5,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
-	"gitlab.com/jaderabbit/go-rabbit/chaincode"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
 )
 
 // request request shared data

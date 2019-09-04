@@ -2,15 +2,15 @@ package chaincode
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 
+	"github.com/gaeanetwork/gaea-core/common/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric/protos/common"
 	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/hyperledger/fabric/protos/utils"
 	"github.com/pkg/errors"
-	comm "gitlab.com/jaderabbit/go-rabbit/common"
-	"gitlab.com/jaderabbit/go-rabbit/core/types"
 )
 
 func list(cfg *Config, channelID string, getInstalledChaincodes, getInstantiatedChaincodes bool) ([]*types.ChaincodeInfo, error) {
@@ -73,7 +73,7 @@ func list(cfg *Config, channelID string, getInstalledChaincodes, getInstantiated
 	infoList := []*types.ChaincodeInfo{}
 	for _, cc := range cqr.Chaincodes {
 		ccinfo := &types.ChaincodeInfo{
-			ID:      comm.BytesToHex(cc.Id),
+			ID:      hex.EncodeToString(cc.Id),
 			Name:    cc.Name,
 			Version: cc.Version,
 			Path:    cc.Path,

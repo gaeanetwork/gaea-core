@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/astaxie/beego"
-	"gitlab.com/jaderabbit/go-rabbit/tee/task"
+	"github.com/gaeanetwork/gaea-core/tee/task"
 )
 
 // TeeTaskController for tee task creates, executes, and various queries
