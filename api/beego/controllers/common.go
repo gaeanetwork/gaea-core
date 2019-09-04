@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	"github.com/astaxie/beego"
+	"github.com/gaeanetwork/gaea-core/i18n"
 	"github.com/hyperledger/fabric/common/flogging"
-	"gitlab.com/jaderabbit/go-rabbit/i18n"
 )
 
 var logger = flogging.MustGetLogger("tee.api.controllers")

@@ -1,0 +1,208 @@
+{
+    "language": "zh",
+    "messages": [
+        {
+            "id": "Error invoke succeeded but the response status was not 200 (response: {Stringe})",
+            "message": "Error invoke succeeded but the response status was not 200 (response: {Stringe})",
+            "translation": "调用成功但响应状态不是200（响应：{Stringe}）",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "Error cannot find the business: {Stringe}",
+            "message": "Error cannot find the business: {Stringe}",
+            "translation": "错误无法找到业务：{Stringe}",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "Error emtpy business: {Stringe}",
+            "message": "Error emtpy business: {Stringe}",
+            "translation": "错误空业务：{Stringe}",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "Error business version too low: src[{SrcV}] --\u003e dest[{DestV}]",
+            "message": "Error business version too low: src[{SrcV}] --\u003e dest[{DestV}]",
+            "translation": "错误业务版本太低：原版本[{SrcV}] --\u003e 目标版本[{DestV}]",
+            "placeholders": [
+                {
+                    "id": "SrcV",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "e.SrcV"
+                },
+                {
+                    "id": "DestV",
+                    "string": "%[2]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 2,
+                    "expr": "e.DestV"
+                }
+            ]
+        },
+        {
+            "id": "Invalid channel create transaction : {Stringe}",
+            "message": "Invalid channel create transaction : {Stringe}",
+            "translation": "渠道创建交易无效：{Stringe}",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "genesis block file not found {Stringe}",
+            "message": "genesis block file not found {Stringe}",
+            "translation": "未找到genesis block file {Stringe}",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "proposal failed (err: {Stringe})",
+            "message": "proposal failed (err: {Stringe})",
+            "translation": "提案失败（错误：{Stringe}）",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "Error does not exists this channel. id: {Stringe}",
+            "message": "Error does not exists this channel. id: {Stringe}",
+            "translation": "此通道不存在. id: {Stringe}",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "Error channel key[{Stringe}] is empty",
+            "message": "Error channel key[{Stringe}] is empty",
+            "translation": "渠道key[{Stringe}]值为空",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "Error finding the peer. address: {Stringe}",
+            "message": "Error finding the peer. address: {Stringe}",
+            "translation": "按地址查找节点时发生错误。地址：{Stringe}",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "Error this peer address is not included in the channel peers. address: {Stringe}",
+            "message": "Error this peer address is not included in the channel peers. address: {Stringe}",
+            "translation": "错误此节点地址未包含在通道节点地址中。地址：{Stringe}",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "Peer joined successfully. address: {Stringe}",
+            "message": "Peer joined successfully. address: {Stringe}",
+            "translation": "节点成功加入链。地址：{Stringe}",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        },
+        {
+            "id": "Error peer already joined this channel: {Stringe}",
+            "message": "Error peer already joined this channel: {Stringe}",
+            "translation": "错误节点已加入此链：{Stringe}",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ]
+        }
+    ]
+}

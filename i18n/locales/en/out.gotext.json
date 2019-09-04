@@ -1,0 +1,234 @@
+{
+    "language": "en",
+    "messages": [
+        {
+            "id": "Error invoke succeeded but the response status was not 200 (response: {Stringe})",
+            "message": "Error invoke succeeded but the response status was not 200 (response: {Stringe})",
+            "translation": "Error invoke succeeded but the response status was not 200 (response: {Stringe})",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Error cannot find the business: {Stringe}",
+            "message": "Error cannot find the business: {Stringe}",
+            "translation": "Error cannot find the business: {Stringe}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Error emtpy business: {Stringe}",
+            "message": "Error emtpy business: {Stringe}",
+            "translation": "Error emtpy business: {Stringe}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Error business version too low: src[{SrcV}] --\u003e dest[{DestV}]",
+            "message": "Error business version too low: src[{SrcV}] --\u003e dest[{DestV}]",
+            "translation": "Error business version too low: src[{SrcV}] --\u003e dest[{DestV}]",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "SrcV",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "e.SrcV"
+                },
+                {
+                    "id": "DestV",
+                    "string": "%[2]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 2,
+                    "expr": "e.DestV"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Invalid channel create transaction : {Stringe}",
+            "message": "Invalid channel create transaction : {Stringe}",
+            "translation": "Invalid channel create transaction : {Stringe}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "genesis block file not found {Stringe}",
+            "message": "genesis block file not found {Stringe}",
+            "translation": "genesis block file not found {Stringe}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "proposal failed (err: {Stringe})",
+            "message": "proposal failed (err: {Stringe})",
+            "translation": "proposal failed (err: {Stringe})",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Error does not exists this channel. id: {Stringe}",
+            "message": "Error does not exists this channel. id: {Stringe}",
+            "translation": "Error does not exists this channel. id: {Stringe}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Error channel key[{Stringe}] is empty",
+            "message": "Error channel key[{Stringe}] is empty",
+            "translation": "Error channel key[{Stringe}] is empty",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Error finding the peer. address: {Stringe}",
+            "message": "Error finding the peer. address: {Stringe}",
+            "translation": "Error finding the peer. address: {Stringe}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Error this peer address is not included in the channel peers. address: {Stringe}",
+            "message": "Error this peer address is not included in the channel peers. address: {Stringe}",
+            "translation": "Error this peer address is not included in the channel peers. address: {Stringe}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Peer joined successfully. address: {Stringe}",
+            "message": "Peer joined successfully. address: {Stringe}",
+            "translation": "Peer joined successfully. address: {Stringe}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Error peer already joined this channel: {Stringe}",
+            "message": "Error peer already joined this channel: {Stringe}",
+            "translation": "Error peer already joined this channel: {Stringe}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Stringe",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "string(e)"
+                }
+            ],
+            "fuzzy": true
+        }
+    ]
+}

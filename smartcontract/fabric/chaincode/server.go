@@ -3,7 +3,7 @@ package chaincode
 import (
 	"sync"
 
-	"gitlab.com/jaderabbit/go-rabbit/core/types"
+	"github.com/gaeanetwork/gaea-core/common/types"
 )
 
 var mapServer map[string]*Server

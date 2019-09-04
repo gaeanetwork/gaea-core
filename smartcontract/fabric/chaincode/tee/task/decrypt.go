@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
+	"github.com/gaeanetwork/gaea-core/common"
+	"github.com/gaeanetwork/gaea-core/crypto"
+	"github.com/gaeanetwork/gaea-core/crypto/ecc"
+	"github.com/gaeanetwork/gaea-core/tee"
+	"github.com/gaeanetwork/gaea-core/tee/task"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/pkg/errors"
-	"gitlab.com/jaderabbit/go-rabbit/common"
-	"gitlab.com/jaderabbit/go-rabbit/common/crypto"
-	"gitlab.com/jaderabbit/go-rabbit/common/crypto/ecc"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
-	"gitlab.com/jaderabbit/go-rabbit/tee/task"
 )
 
 // decrypt data address

@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/gaeanetwork/gaea-core/api"
+	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/gaeanetwork/gaea-core/smartcontract/fabric"
 	"github.com/gaeanetwork/gaea-core/smartcontract/factory"
 	"github.com/gaeanetwork/gaea-core/tee/server"
@@ -24,7 +25,7 @@ import (
 func Start() {
 	r := setupRouter()
 	go factory.InitSmartContractService(&fabric.Chaincode{})
-	go server.NewTeeServer(server.GRPCAddr).Start()
+	go server.NewTeeServer(config.GRPCAddr).Start()
 	gracefulStart(r)
 }
 
@@ -56,7 +57,7 @@ func setupRouter() *gin.Engine {
 
 func gracefulStart(router *gin.Engine) {
 	srv := &http.Server{
-		Addr:    server.ListenAddr,
+		Addr:    config.ListenAddr,
 		Handler: router,
 	}
 
@@ -68,10 +69,10 @@ func gracefulStart(router *gin.Engine) {
 	}()
 
 	// Start profiling http endpoint if enabled
-	if server.ProfileEnabled {
+	if config.ProfileEnabled {
 		go func() {
-			log.Printf("Starting profiling server with listenAddress = %s\n", server.PProfAddr)
-			if profileErr := http.ListenAndServe(server.PProfAddr, nil); profileErr != nil {
+			log.Printf("Starting profiling server with listenAddress = %s\n", config.PProfAddr)
+			if profileErr := http.ListenAndServe(config.PProfAddr, nil); profileErr != nil {
 				log.Panicf("Error starting profiler: %v\n", profileErr)
 			}
 		}()

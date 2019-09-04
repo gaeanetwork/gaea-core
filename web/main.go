@@ -2,6 +2,7 @@ package main
 
 import (
 	beegoserver "github.com/gaeanetwork/gaea-core/web/beego"
+	ginserver "github.com/gaeanetwork/gaea-core/web/gin"
 )
 
 func main() {

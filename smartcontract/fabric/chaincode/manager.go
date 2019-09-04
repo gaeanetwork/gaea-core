@@ -30,7 +30,7 @@ const (
 	Offline
 )
 
-// RabbitChaincode used as an attribute in chaincode struct, for example:gitlab.com/jaderabbit/chaincode/example
+// RabbitChaincode used as an attribute in chaincode struct
 type RabbitChaincode struct{}
 
 // ReviewChaincode review chaincode

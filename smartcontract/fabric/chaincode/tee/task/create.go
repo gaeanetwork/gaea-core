@@ -1,18 +1,19 @@
 package main
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
 
+	"github.com/gaeanetwork/gaea-core/common"
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/gaeanetwork/gaea-core/tee"
+	"github.com/gaeanetwork/gaea-core/tee/task"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/pkg/errors"
-	"gitlab.com/jaderabbit/go-rabbit/chaincode"
-	"gitlab.com/jaderabbit/go-rabbit/common"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
-	"gitlab.com/jaderabbit/go-rabbit/tee/task"
 )
 
 const (
@@ -160,7 +161,12 @@ func sendSharedDataRequest(stub shim.ChaincodeStubInterface, dataID, privHex, re
 func constructSharedDataRequestArgs(data *tee.SharedData, privHex, requester string) ([][]byte, error) {
 	args := []string{data.ID, requester}
 	if len(data.Signatures) > 0 && data.Signatures[0] != "" {
-		hash, sigs, err := chaincode.GetArgsHashAndSignatures(privHex, args)
+		privBytes, err := hex.DecodeString(privHex)
+		if err != nil {
+			return nil, errors.Wrapf(err, "failed to get priv bytes, hex: %s", privHex)
+		}
+
+		hash, sigs, err := chaincode.GetArgsHashAndSignatures(privBytes, args)
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to get arguments hash and signatures, args: %v", args)
 		}

@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/cmd"
 	protcommon "github.com/hyperledger/fabric/protos/common"
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/hyperledger/fabric/protos/utils"
 )
-
-const upgradeCmdName = "upgrade"
 
 func upgrade(cfg *Config) error {
 	cfg.CommandName = "upgrade"
@@ -34,7 +33,7 @@ func upgrade(cfg *Config) error {
 }
 
 //upgrade the command via Endorser
-func chaincodeUpgrade(cf *ChaincodeCmdFactory, cfg *Config) (*protcommon.Envelope, error) {
+func chaincodeUpgrade(cf *cmd.ChaincodeCmdFactory, cfg *Config) (*protcommon.Envelope, error) {
 	spec, err := cfg.CreateChaincodeSpec()
 	if err != nil {
 		return nil, err

@@ -37,6 +37,16 @@ func FromPubHex(pubHex string) (*ecdsa.PublicKey, error) {
 	return FromPubBytes(pubBytes)
 }
 
+// FromPrivHex convert private key hex string to ecdsa private key
+func FromPrivHex(privHex string) (*ecdsa.PrivateKey, error) {
+	privBytes, err := hex.DecodeString(privHex)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting byte slice from privHex: %s, error: %v", privHex, err)
+	}
+
+	return FromPrivBytes(privBytes)
+}
+
 // FromPrivBytes convert private key bytes to ecdsa private key
 func FromPrivBytes(privBytes []byte) (*ecdsa.PrivateKey, error) {
 	privKey, err := x509.ParsePKCS8PrivateKey(privBytes)

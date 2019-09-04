@@ -11,12 +11,13 @@ import (
 	"path/filepath"
 	"strconv"
 
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/gaeanetwork/gaea-core/tee"
+	"github.com/gaeanetwork/gaea-core/tee/container"
+	"github.com/gaeanetwork/gaea-core/tee/task"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
-	"gitlab.com/jaderabbit/go-rabbit/chaincode"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
-	"gitlab.com/jaderabbit/go-rabbit/tee/container"
-	"gitlab.com/jaderabbit/go-rabbit/tee/task"
+	"github.com/pkg/errors"
 )
 
 func execute(stub shim.ChaincodeStubInterface, args []string) pb.Response {
@@ -91,10 +92,10 @@ func doExecute(stub shim.ChaincodeStubInterface, algorithm []byte, teetask *tee.
 	}
 	executionLog.WriteString("下载数据成功！\n")
 
-	container := container.GetContainer(teetask.Container)
 	executionLog.WriteString("正在创建可信计算环境...\n")
-	if err = container.Create(); err != nil {
-		return err
+	container, err := container.GetContainer(teetask.Container)
+	if err != nil {
+		return errors.Wrapf(err, "failed to get container by task.Container, container: %v", teetask.Container)
 	}
 	defer container.Destroy()
 	executionLog.WriteString("创建可信计算环境成功！\n")

@@ -40,6 +40,32 @@ func Encrypt(plaintext, key []byte, block cipher.Block) (ciphertext []byte) {
 	return
 }
 
+// AesDecrypt aes decrypt
+func AesDecrypt(plaintext, aesKey []byte) (ciphertext []byte, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("failed to decrypt by aes")
+		}
+	}()
+
+	if len(plaintext) == 0 {
+		return
+	}
+
+	// if the length of ase key is less then 32, add 0 to the right of key, https://www.ietf.org/rfc/rfc5649.txt
+	if len(aesKey) < 32 {
+		buffer := make([]byte, 32-len(aesKey))
+		aesKey = append(aesKey, buffer...)
+	}
+
+	block, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return Decrypt(plaintext, aesKey, block)
+}
+
 // Decrypt the ciphertext to plaintext, this function parameter is reversed.
 func Decrypt(plaintext, key []byte, block cipher.Block) (ciphertext []byte, err error) {
 	blockSize := block.BlockSize()
