@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/gaeanetwork/gaea-core/common"
 	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
 	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/gaeanetwork/gaea-core/tee/task"
@@ -171,7 +170,7 @@ func constructSharedDataRequestArgs(data *tee.SharedData, privHex, requester str
 			return nil, errors.Wrapf(err, "failed to get arguments hash and signatures, args: %v", args)
 		}
 
-		return [][]byte{[]byte("request"), []byte(args[0]), []byte(args[1]), []byte(common.BytesToHex(hash)), sigs}, nil
+		return [][]byte{[]byte("request"), []byte(args[0]), []byte(args[1]), []byte(hex.EncodeToString(hash)), sigs}, nil
 	}
 
 	return [][]byte{[]byte("request"), []byte(args[0]), []byte(args[1])}, nil

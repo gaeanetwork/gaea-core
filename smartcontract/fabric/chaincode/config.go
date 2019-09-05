@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gaeanetwork/gaea-core/common"
+	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/gogo/protobuf/proto"
 	"github.com/hyperledger/fabric/common/flogging"
 	"github.com/hyperledger/fabric/core/chaincode/platforms"
@@ -102,7 +103,7 @@ func ReadViperConfiguration() error {
 	rwMutex.Lock()
 	defer rwMutex.Unlock()
 
-	if err := viper.UnmarshalKey("chaincodeList", &mapConfig); err != nil {
+	if err := config.GetGaeaViper().UnmarshalKey("chaincodeList", &mapConfig); err != nil {
 		return fmt.Errorf("Could not Unmarshal %s YAML config, err: %v", "chaincodeList", err)
 	}
 
@@ -121,7 +122,7 @@ func GetConfig(chaincodeName string) (*Config, error) {
 
 	cfg, ok := mapConfig[chaincodeName]
 	if !ok {
-		return nil, fmt.Errorf("not support chaincode name:%s", chaincodeName)
+		return nil, errors.Errorf("not support chaincode name: %s, mapConfig: %v", chaincodeName, mapConfig)
 	}
 
 	if len(cfg.PeerAddresses) == 0 {

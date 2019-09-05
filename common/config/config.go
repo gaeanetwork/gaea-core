@@ -38,16 +38,16 @@ var (
 	logger = flogging.MustGetLogger("Core.Config")
 
 	gaeaViper *viper.Viper
-	// DefaultConfig for go-rabbit
+	// DefaultConfig for gaea-core
 	DefaultConfig *Config
 )
 
-// Config for go-rabbit
+// Config for gaea-core
 type Config struct {
 	ListenAddr     string `mapstructure:"ListenAddr" yaml:"ListenAddr"`
 	GRPCAddr       string `mapstructure:"GRPCAddr" yaml:"GRPCAddr"`
-	PProfAddr      string `mapstructure:"ProfileEnabled" yaml:"ProfileEnabled"`
-	ProfileEnabled string `mapstructure:"ProfileEnabled" yaml:"ProfileEnabled"`
+	PProfAddr      string `mapstructure:"PProfAddr" yaml:"PProfAddr"`
+	ProfileEnabled bool   `mapstructure:"ProfileEnabled" yaml:"ProfileEnabled"`
 }
 
 // Initialize read the rabbit.yaml configuration

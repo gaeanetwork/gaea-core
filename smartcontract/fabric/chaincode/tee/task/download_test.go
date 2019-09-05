@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/tee"
+	"github.com/gaeanetwork/gaea-core/tee/task"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
-	"gitlab.com/jaderabbit/go-rabbit/tee/task"
 )
 
 var (

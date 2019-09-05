@@ -1,14 +1,14 @@
 package main
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/common"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
 )
 
 func Test_Invoke_request(t *testing.T) {
@@ -44,7 +44,7 @@ func requestData(t *testing.T, stub *shim.MockStub, txID, did string) pb.Respons
 
 	preArgs := []string{did, PubHexForTest}
 	hash, signatures := getHashAndSignatures(t, preArgs)
-	response1 := stub.MockInvoke("requestID", [][]byte{[]byte("request"), []byte(did), []byte(PubHexForTest), []byte(common.BytesToHex(hash)), signatures})
+	response1 := stub.MockInvoke("requestID", [][]byte{[]byte("request"), []byte(did), []byte(PubHexForTest), []byte(hex.EncodeToString(hash)), signatures})
 	assert.Equal(t, shim.OK, int(response1.Status))
 	assert.Empty(t, response1.Message)
 	assert.NotNil(t, response1.Payload)

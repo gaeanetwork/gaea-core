@@ -3,6 +3,7 @@ package server
 import (
 	"net"
 
+	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/gaeanetwork/gaea-core/protos/service"
 	"github.com/gaeanetwork/gaea-core/services/shareddata"
 	"github.com/gaeanetwork/gaea-core/services/transmission"
@@ -18,7 +19,14 @@ type TeeServer struct {
 
 // NewTeeServer create a tee server by address
 func NewTeeServer(address string) *TeeServer {
-	grpcServer := grpc.NewServer()
+	//set up our server options
+	var serverOpts []grpc.ServerOption
+
+	// set max send and recv msg sizes
+	serverOpts = append(serverOpts, grpc.MaxSendMsgSize(config.MaxSendMsgSize))
+	serverOpts = append(serverOpts, grpc.MaxRecvMsgSize(config.MaxRecvMsgSize))
+
+	grpcServer := grpc.NewServer(serverOpts...)
 	service.RegisterTransmissionServer(grpcServer, transmission.NewTransmissionService())
 	service.RegisterSharedDataServer(grpcServer, shareddata.NewSharedDataService())
 

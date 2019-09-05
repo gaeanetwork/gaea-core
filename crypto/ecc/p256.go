@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/gaeanetwork/gaea-core/crypto/ecc/ecies"
 	"github.com/pkg/errors"
 )
 
@@ -65,4 +66,26 @@ func FromPubBytes(pubBytes []byte) (*ecdsa.PublicKey, error) {
 	}
 
 	return &ecdsa.PublicKey{Curve: elliptic.P256(), X: x, Y: y}, nil
+}
+
+// EncryptByECCPublicKey encrypt the plaintext to ciphertext by ecc public key
+func EncryptByECCPublicKey(pubBytes, plaintext []byte) ([]byte, error) {
+	x, y := elliptic.Unmarshal(elliptic.P256(), pubBytes)
+	pubkey := &ecdsa.PublicKey{Curve: elliptic.P256(), X: x, Y: y}
+	pub := ecies.ImportECDSAPublic(pubkey)
+
+	return ecies.Encrypt(rand.Reader, pub, plaintext, nil, nil)
+}
+
+// DecryptByECCPrivateKey decrypt the ciphertext to plaintext by ecc private key
+func DecryptByECCPrivateKey(privBytes, ciphertext []byte) ([]byte, error) {
+	privKey, err := x509.ParsePKCS8PrivateKey(privBytes)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to ParsePKCS8PrivateKey from private Bytes")
+	}
+
+	privkey := privKey.(*ecdsa.PrivateKey)
+	priv := ecies.ImportECDSA(privkey)
+
+	return priv.Decrypt(ciphertext, nil, nil)
 }

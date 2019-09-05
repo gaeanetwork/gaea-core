@@ -2,7 +2,7 @@ package main
 
 /*
     ============================ Deploy teetask chaincode ============================
-	./peer chaincode package teetaskpack.out -n tee_exec -v 1.0 -s -S -p gitlab.com/jaderabbit/go-rabbit/chaincode/tee/task
+	./peer chaincode package teetaskpack.out -n tee_exec -v 1.0 -s -S -p github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode/tee/task
 	mkdir $HOME/chaincodes/tee
 	mv -fv teetaskpack.out $HOME/chaincodes/tee/teetaskpack.out
 
@@ -10,10 +10,10 @@ package main
 	CORE_PEER_MSPCONFIGPATH=crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp ./peer chaincode install $HOME/chaincodes/tee/teetaskpack.out
 
 	# instantiate
-	CORE_PEER_MSPCONFIGPATH=crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp ./peer chaincode instantiate -C syschannel -n tee_exec -v 1.0 -c '{"Args":["0x307702010104204368376222802d1a941f2eb0b7186a2c75f75e368946f923ad37e7c7718c2d7aa00a06082a8648ce3d030107a14403420004e72b30244d2eda1d4b911f8b1fbadafd34017e2d76188924a1d0459a4a6c5c87e122548a9cb9fc93b84af373838af3d0687b81456550a8aae4bec35a9b438e01", "0x04e72b30244d2eda1d4b911f8b1fbadafd34017e2d76188924a1d0459a4a6c5c87e122548a9cb9fc93b84af373838af3d0687b81456550a8aae4bec35a9b438e01"]}' -o orderer.rabbit.com:7050
+	CORE_PEER_MSPCONFIGPATH=crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp ./peer chaincode instantiate -C syschannel -n tee_exec -v 1.0 -c '{"Args":["308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b02010104202d130ea6dac76fcae718fbd20bf146643aa66fe6e5902975d2c5ed6ab3bcb5e2a144034200048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293", "048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293"]}' -o orderer.rabbit.com:7050
 
 	# upgrade
-	CORE_PEER_MSPCONFIGPATH=crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp ./peer chaincode upgrade -C syschannel -n tee_exec -v 1.1 -c '{"Args":["0x307702010104204368376222802d1a941f2eb0b7186a2c75f75e368946f923ad37e7c7718c2d7aa00a06082a8648ce3d030107a14403420004e72b30244d2eda1d4b911f8b1fbadafd34017e2d76188924a1d0459a4a6c5c87e122548a9cb9fc93b84af373838af3d0687b81456550a8aae4bec35a9b438e01", "0x04e72b30244d2eda1d4b911f8b1fbadafd34017e2d76188924a1d0459a4a6c5c87e122548a9cb9fc93b84af373838af3d0687b81456550a8aae4bec35a9b438e01"]}' -o orderer.rabbit.com:7050
+	CORE_PEER_MSPCONFIGPATH=crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp ./peer chaincode upgrade -C syschannel -n tee_exec -v 1.1 -c '{"Args":["308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b02010104202d130ea6dac76fcae718fbd20bf146643aa66fe6e5902975d2c5ed6ab3bcb5e2a144034200048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293", "048f03f8321b00a4466f4bf4be51c91898cd50d8cc64c6ecf53e73443e348d5925a16f88c8952b78ebac2dc277a2cc54c77b4c3c07830f49629b689edf63086293"]}' -o orderer.rabbit.com:7050
 
 	============================ Test tee chaincode ============================
 	./peer chaincode invoke -C syschannel -n tee_exec -c '{"Args":["create","taskID","0x1111"]}' -o orderer.rabbit.com:7050
@@ -25,10 +25,10 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/tee"
+	"github.com/gaeanetwork/gaea-core/tee/task"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/jaderabbit/go-rabbit/tee"
-	"gitlab.com/jaderabbit/go-rabbit/tee/task"
 )
 
 func Test_Init(t *testing.T) {

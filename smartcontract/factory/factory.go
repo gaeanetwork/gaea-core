@@ -6,6 +6,8 @@ import (
 	"github.com/gaeanetwork/gaea-core/smartcontract"
 	"github.com/gaeanetwork/gaea-core/smartcontract/ethereum"
 	"github.com/gaeanetwork/gaea-core/smartcontract/fabric"
+	"github.com/gaeanetwork/gaea-core/smartcontract/fabric/chaincode"
+	"github.com/hyperledger/fabric/peer/common"
 	"github.com/pkg/errors"
 )
 
@@ -41,6 +43,8 @@ func defaultInitialize() {
 func InitSmartContractService(service smartcontract.Service) {
 	defaultServiceInitOnce.Do(defaultInitialize)
 
+	common.InitCmd(nil, []string{})
+	chaincode.ReadViperConfiguration()
 	rwMutex.Lock()
 	smartContractServiceMap[service.GetPlatform()] = service
 	rwMutex.Unlock()

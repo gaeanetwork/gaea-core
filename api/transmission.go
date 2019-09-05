@@ -7,10 +7,12 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/gaeanetwork/gaea-core/protos/service"
 	"github.com/gaeanetwork/gaea-core/services"
 	"github.com/gaeanetwork/gaea-core/services/transmission"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 )
 
 // RegisterAPI register apis to gin server
@@ -37,7 +39,15 @@ func uploadFile(c *gin.Context) {
 		return
 	}
 
-	conn, err := services.GetGRPCConnection()
+	var dialOpts []grpc.DialOption
+	dialOpts = append(dialOpts, grpc.WithInsecure())
+	dialOpts = append(dialOpts, grpc.WithDefaultCallOptions(
+		grpc.MaxCallRecvMsgSize(config.MaxRecvMsgSize),
+		grpc.MaxCallSendMsgSize(config.MaxSendMsgSize)))
+
+	fmt.Println("dialOpts:", dialOpts)
+	conn, err := grpc.Dial(config.GRPCAddr, dialOpts...)
+	// conn, err := services.GetGRPCConnection()
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": err.Error()})
 		return
