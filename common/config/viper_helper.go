@@ -37,16 +37,16 @@ func InitConfig(v *viper.Viper, fileName string) error {
 // the configuration we need. If v == nil, we will initialize the global
 // Viper instance
 func InitViper(v *viper.Viper, configName string) error {
-	var altPath = os.Getenv(EnvName)
-	if altPath != "" {
+	configDir = os.Getenv(EnvName)
+	if configDir != "" {
 		// If the user has overridden the path with an envvar, its the only path
 		// we will consider
 
-		if !common.FileOrFolderExists(altPath) {
-			return errors.Errorf("%s %s does not exist", EnvName, altPath)
+		if !common.FileOrFolderExists(configDir) {
+			return errors.Errorf("%s %s does not exist", EnvName, configDir)
 		}
 
-		AddConfigPath(v, altPath)
+		AddConfigPath(v, configDir)
 	} else {
 		// If we get here, we should use the default paths in priority order:
 		//

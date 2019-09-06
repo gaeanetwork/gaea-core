@@ -1,9 +1,6 @@
 package config
 
 import (
-	"os"
-
-	"github.com/gaeanetwork/gaea-core/common"
 	"github.com/hyperledger/fabric/common/flogging"
 	"github.com/spf13/viper"
 )
@@ -23,9 +20,9 @@ var (
 
 const (
 	// OfficialPath the default officail config path
-	OfficialPath = "/etc/gaeanetwork/gaea-core"
+	OfficialPath = "/etc/gaeanetwork/gaea-core/conf"
 	// CurrentPath is current relative path
-	CurrentPath = "./"
+	CurrentPath = "./conf"
 
 	// EnvName default config path
 	EnvName        = "GAEA_CFG_PATH"
@@ -52,16 +49,6 @@ type Config struct {
 
 // Initialize read the rabbit.yaml configuration
 func Initialize() {
-	var ok bool
-	configDir, ok = os.LookupEnv(EnvName)
-	if !ok {
-		logger.Panicf("the environment variable %s is not set", EnvName)
-	}
-
-	if !common.FileOrFolderExists(configDir) {
-		logger.Panicf("path:%s not found", configDir)
-	}
-
 	gaeaViper = viper.New()
 	if err := InitConfig(gaeaViper, configFileName); err != nil {
 		logger.Panicf("Failed to initial %s.yaml, err: %v", configFileName, err)
