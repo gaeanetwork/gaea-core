@@ -25,6 +25,9 @@ import (
 func Start() {
 	config.Initialize()
 
+	// Switch to "release" mode in production.
+	gin.SetMode(gin.ReleaseMode)
+
 	r := setupRouter()
 	go factory.InitSmartContractService(&fabric.Chaincode{})
 	go server.NewTeeServer(config.GRPCAddr).Start()
