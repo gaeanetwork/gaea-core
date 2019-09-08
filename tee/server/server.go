@@ -7,6 +7,7 @@ import (
 	"github.com/gaeanetwork/gaea-core/protos/service"
 	"github.com/gaeanetwork/gaea-core/services/shareddata"
 	"github.com/gaeanetwork/gaea-core/services/transmission"
+	"github.com/gaeanetwork/gaea-core/services/user"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )
@@ -29,6 +30,9 @@ func NewTeeServer(address string) *TeeServer {
 	grpcServer := grpc.NewServer(serverOpts...)
 	service.RegisterTransmissionServer(grpcServer, transmission.NewTransmissionService())
 	service.RegisterSharedDataServer(grpcServer, shareddata.NewSharedDataService())
+
+	// user models to register and login
+	user.RegisterUserServiceIntoGRPCServer(grpcServer)
 
 	return &TeeServer{address: address, server: grpcServer}
 }

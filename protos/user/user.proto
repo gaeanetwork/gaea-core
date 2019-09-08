@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+/***
+    protoc -I=. --go_out=. user.proto
+*/
+// option go_package = "github.com/gaeanetwork/gaea-core/protos/tee";
+
+package user;
+
+message User {
+  string id = 1;
+  string user_name = 2;
+  string password = 3;
+  string public_key = 4;
+  string secret_priv_key = 5;
+}
