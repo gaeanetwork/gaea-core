@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+/**
+    cd $GOPATH/src
+    protoc -I=. --go_out=plugins=grpc:. github.com/gaeanetwork/gaea-core/protos/user/services.proto
+*/
+// option go_package = "github.com/gaeanetwork/gaea-core/protos/user";
+
+package user;
+
+import "github.com/gaeanetwork/gaea-core/protos/user/user.proto";
+
+service UserService {
+    rpc Register (RegisterRequest) returns (RegisterResponse);
+    rpc Login (LoginRequest) returns (LoginResponse);
+    rpc GetUserByID (GetUserByIDRequest) returns (GetUserByIDResponse);
+}
+
+message RegisterRequest {
+    string user_name = 1;
+    string password = 2;
+    string public_key = 3;
+    string secret_priv_key = 4;
+}
+
+message RegisterResponse {
+    User user = 1;
+}
+
+message LoginRequest {
+    string user_name = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    User user = 1;
+}
+
+message GetUserByIDRequest {
+    string user_id = 1;
+}
+
+message GetUserByIDResponse {
+    User user = 1;
+}
