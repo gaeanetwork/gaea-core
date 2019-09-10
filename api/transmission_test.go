@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -9,7 +10,6 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/gaeanetwork/gaea-core/common/config"
@@ -44,7 +44,7 @@ func Test_TransferFile(t *testing.T) {
 	c.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
 	result := w.Body.String()
-	assert.Contains(t, result, "'hello' uploaded!")
+	assert.Contains(t, result, "file_id")
 
 	// Download
 	fileID := getFileID(result)
@@ -144,12 +144,14 @@ func Test_DownloadFile_Error(t *testing.T) {
 	assert.Contains(t, w.Body.String(), "connect: connection refused")
 }
 
-// result := "'hello' uploaded! file_id: 711e9609339e92b03ddc0a211827dba421f38f9ed8b9d806e1ffdd8c15ffa03d"
+// result := "{"file_id":"711e9609339e92b03ddc0a211827dba421f38f9ed8b9d806e1ffdd8c15ffa03d"}"
 func getFileID(result string) string {
-	aa := strings.Split(result, "file_id: ")
-	if len(aa) > 1 {
-		return aa[1]
+	res := struct {
+		FileID string `json:"file_id"`
+	}{}
+	if err := json.Unmarshal([]byte(result), &res); err != nil {
+		panic(err)
 	}
 
-	return ""
+	return res.FileID
 }

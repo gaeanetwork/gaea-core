@@ -27,7 +27,7 @@ upload a file to server
 path: /files [POST]
 */
 func uploadFile(c *gin.Context) {
-	file, header, err := c.Request.FormFile("file")
+	file, _, err := c.Request.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -45,7 +45,6 @@ func uploadFile(c *gin.Context) {
 		grpc.MaxCallRecvMsgSize(config.MaxRecvMsgSize),
 		grpc.MaxCallSendMsgSize(config.MaxSendMsgSize)))
 
-	fmt.Println("dialOpts:", dialOpts)
 	conn, err := grpc.Dial(config.GRPCAddr, dialOpts...)
 	// conn, err := services.GetGRPCConnection()
 	if err != nil {
@@ -61,7 +60,7 @@ func uploadFile(c *gin.Context) {
 		return
 	}
 
-	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded! file_id: %s", header.Filename, resp.GetFileId()))
+	c.JSON(http.StatusOK, gin.H{"file_id": resp.GetFileId()})
 }
 
 /**
