@@ -27,7 +27,7 @@ func (o *TeeTaskController) URLMapping() {
 // @Description Create a tee task to calculate the data, the task creator should provide all the data ID and algorithm ID, and the location where the result is stored
 // @Param	data_id[]		formData 	[]string	true		"All shared data IDs, this shared data stores the raw data address."
 // @Param	algorithm_id	formData 	string		true		"Shared algorithm data ID."
-// @Param	result_address	formData 	string		true		"The result of the trusted calculation is the address."
+// @Param	result_address	formData 	string		false		"The address where the result of the tee is calculated in the container. default is /tmp/teedata"
 // @Success 200 {string} tee.SharedData.ID
 // @router / [post]
 func (o *TeeTaskController) Create() {
@@ -39,6 +39,10 @@ func (o *TeeTaskController) Create() {
 
 	if len(req.DataIDs) == 1 && strings.Contains(req.DataIDs[0], ",") {
 		req.DataIDs = strings.Split(req.DataIDs[0], ",")
+	}
+
+	if req.ResultAddress == "" {
+		req.ResultAddress = task.DefaultResultAddress
 	}
 
 	logger.Infof("Create a tee task by req: %v", req)
