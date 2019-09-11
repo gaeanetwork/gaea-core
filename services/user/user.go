@@ -8,6 +8,7 @@ import (
 	"github.com/gaeanetwork/gaea-core/smartcontract"
 	"github.com/gaeanetwork/gaea-core/smartcontract/factory"
 	"github.com/gaeanetwork/gaea-core/tee"
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )
@@ -53,6 +54,7 @@ func (s *Service) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Re
 	}
 
 	user := &pb.User{
+		Id:            uuid.New().String(),
 		UserName:      req.UserName,
 		Password:      req.Password,
 		PublicKey:     req.PublicKey,
@@ -68,27 +70,41 @@ func (s *Service) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Re
 }
 
 func checkRegisterRequest(req *pb.RegisterRequest) error {
-	usernameLen := len(req.UserName)
-	if usernameLen <= 0 || usernameLen > 32 {
-		return errors.Errorf("Invalid username length, should be (0, 32], now: %d", usernameLen)
+	var err error
+	if err = checkUsernameLen(req.UserName); err != nil {
+		return err
 	}
 
-	passwordLen := len(req.Password)
-	if passwordLen <= 0 || passwordLen > 32 {
-		return errors.Errorf("Invalid password length, should be (0, 32], now: %d", passwordLen)
+	if err = checkPasswordLen(req.Password); err != nil {
+		return err
 	}
 
 	return nil
 }
 
 // Login by username and password, return user if login successful
-func (s *Service) Login(context.Context, *pb.LoginRequest) (*pb.LoginResponse, error) {
+func (s *Service) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+	var err error
+	if err = checkUsernameLen(req.UserName); err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	if err = checkPasswordLen(req.Password); err != nil {
+		return nil, err
+	}
+
+	s.rwMutex.RLock()
+	user, exists := s.users[req.UserName]
+	s.rwMutex.RUnlock()
+	if !exists || user.Password != req.Password {
+		return nil, errors.Errorf("User does not exists or password is invalid, username: %s", req.UserName)
+	}
+
+	return &pb.LoginResponse{User: user}, nil
 }
 
-// GetUserByID get the user information by user id, return user if login successful
+// GetUserByID get the user information by user id, return user if user id exists
 func (s *Service) GetUserByID(context.Context, *pb.GetUserByIDRequest) (*pb.GetUserByIDResponse, error) {
 
-	return nil, nil
+	return nil, errors.New("Not implemented")
 }
