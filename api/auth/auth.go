@@ -36,7 +36,7 @@ func Register(c *gin.Context) {
 	defer conn.Close()
 
 	client := user.NewUserServiceClient(conn)
-	resp, err := client.Register(nil, &req)
+	resp, err := client.Register(c, &req)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -61,7 +61,7 @@ func Login(c *gin.Context) {
 	defer conn.Close()
 
 	client := user.NewUserServiceClient(conn)
-	resp, err := client.Login(nil, &req)
+	resp, err := client.Login(c, &req)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

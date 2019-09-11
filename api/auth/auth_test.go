@@ -14,7 +14,7 @@ var (
 )
 
 func getTestLoginRequest() *http.Request {
-	req, _ := http.NewRequest(http.MethodPost, "/testing/login", strings.NewReader("{\"name\":\"AAAAAAAA\", \"password\":\"123\"}"))
+	req, _ := http.NewRequest(http.MethodPost, "/testing/login", strings.NewReader("{\"user_name\":\"AAAAAAAA\", \"password\":\"123\"}"))
 	req.Header.Set("Content-Type", "application/json")
 
 	return req
@@ -22,8 +22,11 @@ func getTestLoginRequest() *http.Request {
 
 func registerTestUser(c *gin.Engine) {
 	expireAfter = expireAfterForTests
-	req, _ := http.NewRequest(http.MethodPost, "/testing/register", strings.NewReader("{\"name\":\"AAAAAAAA\", \"password\":\"123\", \"email\": \"aa@gmail.com\", \"company\": \"xxx\"}"))
+	req, _ := http.NewRequest(http.MethodPost, "/testing/register", strings.NewReader("{\"user_name\":\"AAAAAAAA\", \"password\":\"123\"}"))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	c.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		panic(w.Body.String())
+	}
 }
