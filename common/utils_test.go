@@ -63,3 +63,25 @@ func Benchmark_GetRandomString(b *testing.B) {
 		existsMap[s] = struct{}{}
 	}
 }
+
+func Test_GetRandomStringByLen(t *testing.T) {
+	len := 0
+	s := GetRandomStringByLen(len)
+	assert.Len(t, s, 32)
+
+	len = 16
+	s = GetRandomStringByLen(len)
+	assert.Len(t, s, len)
+
+	len = 33
+	s = GetRandomStringByLen(len)
+	assert.Len(t, s, len)
+
+	len = 1024
+	s = GetRandomStringByLen(len)
+	assert.Len(t, s, len)
+
+	len = 2048
+	s = GetRandomStringByLen(len)
+	assert.Len(t, s, 32)
+}

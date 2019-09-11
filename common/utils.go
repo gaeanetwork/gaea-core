@@ -47,3 +47,15 @@ func FileOrFolderExists(fileOrFolder string) bool {
 func GetRandomString() string {
 	return strconv.FormatInt(rand.Int63(), 10)
 }
+
+// GetRandomStringByLen returns a random hex string of length len. If len is equal to zero or greater than 1024, len is 32.
+func GetRandomStringByLen(len int) string {
+	if len == 0 || len > 1024 {
+		len = 32
+	}
+
+	p := make([]byte, len)
+	rand.Read(p)
+
+	return string(p)
+}
