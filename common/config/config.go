@@ -13,6 +13,9 @@ var (
 	PProfAddr      = ":12668"
 	ProfileEnabled = false
 
+	// Logger level
+	LogLevel = "info"
+
 	// Max send and receive bytes for grpc clients and servers
 	MaxRecvMsgSize = 100 * 1024 * 1024
 	MaxSendMsgSize = 100 * 1024 * 1024
@@ -35,17 +38,7 @@ var (
 	logger = flogging.MustGetLogger("Core.Config")
 
 	gaeaViper *viper.Viper
-	// DefaultConfig for gaea-core
-	DefaultConfig *Config
 )
-
-// Config for gaea-core
-type Config struct {
-	ListenAddr     string `mapstructure:"ListenAddr" yaml:"ListenAddr"`
-	GRPCAddr       string `mapstructure:"GRPCAddr" yaml:"GRPCAddr"`
-	PProfAddr      string `mapstructure:"PProfAddr" yaml:"PProfAddr"`
-	ProfileEnabled bool   `mapstructure:"ProfileEnabled" yaml:"ProfileEnabled"`
-}
 
 // Initialize read the rabbit.yaml configuration
 func Initialize() {
@@ -54,14 +47,16 @@ func Initialize() {
 		logger.Panicf("Failed to initial %s.yaml, err: %v", configFileName, err)
 	}
 
-	readConfigConfiguration()
+	readConfigConfiguration(gaeaViper)
 }
 
-func readConfigConfiguration() {
-	if err := gaeaViper.UnmarshalKey("core", &DefaultConfig); err != nil {
-		logger.Errorf("Could not Unmarshal %s YAML config, err: %v", "orderingEndpoint", err)
-		return
-	}
+func readConfigConfiguration(viper *viper.Viper) {
+	// Setup core
+	ListenAddr = viper.GetString("core.ListenAddr")
+	GRPCAddr = viper.GetString("core.GRPCAddr")
+	PProfAddr = viper.GetString("core.PProfAddr")
+	ProfileEnabled = viper.GetBool("core.ProfileEnabled")
+	LogLevel = viper.GetString("core.LogLevel")
 }
 
 // GetGaeaViper contains the gaea.yaml configuration
