@@ -3,6 +3,7 @@ core:
     GRPCAddr: 0.0.0.0:12667
     ProfileEnabled: false
     PProfAddr: 0.0.0.0:12668
+    LogLevel: info
 
 tee:
     # the default file storage location for transmission services
