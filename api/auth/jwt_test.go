@@ -10,6 +10,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gaeanetwork/gaea-core/common/config"
+	"github.com/gaeanetwork/gaea-core/tee/server"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
@@ -17,10 +18,6 @@ import (
 const (
 	userName = "Budding Leader"
 )
-
-func init() {
-	config.Initialize()
-}
 
 func Test_SignJWTToken(t *testing.T) {
 	expireAfter := 3 * time.Second
@@ -49,6 +46,10 @@ func Test_JWTAuth(t *testing.T) {
 	c := gin.Default()
 	router := c.Group("/testing")
 	RegisterAPI(router)
+	go assert.NotPanics(t, func() {
+		config.GRPCAddr = ":26556"
+		panic(server.NewTeeServer(config.GRPCAddr).Start())
+	})
 
 	auth := router.Group("/", JWTAuth())
 	auth.GET("/ping", func(c *gin.Context) {
