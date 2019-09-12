@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+/**
+    protoc -I=. --go_out=. algorithm.proto
+*/
+// option go_package = "github.com/gaeanetwork/gaea-core/protos/tee";
+
+package tee;
+
+message Algorithm {
+  string id = 1;
+  string name = 2;
+  string hash = 3;
+  string file_id = 4;
+  string description = 5;
+  string owner = 6;
+  int64 create_seconds = 7;
+  int64 update_seconds = 8;
+  repeated string signatures = 9;
+}
