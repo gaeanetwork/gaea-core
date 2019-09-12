@@ -1,20 +1,17 @@
 package config
 
 import (
-	"github.com/hyperledger/fabric/common/flogging"
+	"github.com/gaeanetwork/gaea-core/common/glog"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
 // variables
 var (
-	// TODO - read in config
 	ListenAddr     = ":12666"
 	GRPCAddr       = ":12667"
 	PProfAddr      = ":12668"
 	ProfileEnabled = false
-
-	// Logger level
-	LogLevel = "info"
 
 	// Max send and receive bytes for grpc clients and servers
 	MaxRecvMsgSize = 100 * 1024 * 1024
@@ -33,18 +30,23 @@ const (
 )
 
 var (
-	configDir string
-
-	logger = flogging.MustGetLogger("Core.Config")
-
 	gaeaViper *viper.Viper
+	logger    *zap.Logger
 )
 
-// Initialize read the rabbit.yaml configuration
-func Initialize() {
+// Initialize the gaea.yaml
+func init() {
+	initialize()
+
+	logger = glog.MustGetLoggerWithNamed("common")
+	logger.With(zap.String("logger level", glog.LogLevel)).Info("Configuration initialization succeeded")
+	logger.Sugar().Debugf("print gaea viper: %v", gaeaViper)
+}
+
+func initialize() {
 	gaeaViper = viper.New()
 	if err := InitConfig(gaeaViper, configFileName); err != nil {
-		logger.Panicf("Failed to initial %s.yaml, err: %v", configFileName, err)
+		logger.Sugar().Panicf("Failed to initial %s.yaml, err: %v", configFileName, err)
 	}
 
 	readConfigConfiguration(gaeaViper)
@@ -56,15 +58,10 @@ func readConfigConfiguration(viper *viper.Viper) {
 	GRPCAddr = viper.GetString("core.GRPCAddr")
 	PProfAddr = viper.GetString("core.PProfAddr")
 	ProfileEnabled = viper.GetBool("core.ProfileEnabled")
-	LogLevel = viper.GetString("core.LogLevel")
+	glog.LogLevel = viper.GetString("core.LogLevel")
 }
 
 // GetGaeaViper contains the gaea.yaml configuration
 func GetGaeaViper() *viper.Viper {
 	return gaeaViper
-}
-
-// GetConfigPath get config path
-func GetConfigPath() string {
-	return configDir
 }

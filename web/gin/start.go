@@ -13,28 +13,22 @@ import (
 	"time"
 
 	"github.com/gaeanetwork/gaea-core/api"
+	"github.com/gaeanetwork/gaea-core/api/auth"
 	"github.com/gaeanetwork/gaea-core/common/config"
-	"github.com/gaeanetwork/gaea-core/smartcontract/fabric"
-	"github.com/gaeanetwork/gaea-core/smartcontract/factory"
-	"github.com/gaeanetwork/gaea-core/tee/server"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 // Start gin web http
 func Start() {
-	config.Initialize()
-
-	// Switch to "release" mode in production.
-	gin.SetMode(gin.ReleaseMode)
-
 	r := setupRouter()
-	go factory.InitSmartContractService(&fabric.Chaincode{})
-	go server.NewTeeServer(config.GRPCAddr).Start()
 	gracefulStart(r)
 }
 
 func setupRouter() *gin.Engine {
+	// Switch to "release" mode in production.
+	gin.SetMode(gin.ReleaseMode)
+
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
@@ -48,14 +42,14 @@ func setupRouter() *gin.Engine {
 	// Allows all origins
 	r.Use(cors.Default())
 
-	v1 := r.Group("/api")
+	apiRG := r.Group("/api")
 	{
-		// Ping test - curl http://localhost:8080/api/ping
-		v1.GET("/ping", func(c *gin.Context) { c.String(http.StatusOK, "pong") })
+		// common module - Ping test - curl http://localhost:8080/api/ping
+		apiRG.GET("/ping", func(c *gin.Context) { c.String(http.StatusOK, "pong") })
 
-		// Transmission api register
-		files := v1.Group("/files")
-		api.RegisterAPI(files)
+		// user module
+		api.RegisterTransmissionAPI(apiRG) // Transmission api register
+		auth.RegisterAPI(apiRG)            // Register / Login / Logout
 	}
 	return r
 }

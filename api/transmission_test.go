@@ -21,7 +21,7 @@ import (
 func Test_TransferFile(t *testing.T) {
 	c := gin.Default()
 	router := c.Group("/testing")
-	RegisterAPI(router)
+	RegisterTransmissionAPI(router)
 	go server.NewTeeServer(config.GRPCAddr).Start()
 
 	// write tmp file and make request body
@@ -58,7 +58,7 @@ func Test_TransferFile(t *testing.T) {
 func Test_UploadFile_Error(t *testing.T) {
 	c := gin.Default()
 	router := c.Group("/testing")
-	RegisterAPI(router)
+	RegisterTransmissionAPI(router)
 	config.GRPCAddr = "localhost:1"
 
 	// write tmp file and make request body
@@ -114,7 +114,7 @@ func Test_UploadFile_Error(t *testing.T) {
 func Test_DownloadFile_Error(t *testing.T) {
 	c := gin.Default()
 	router := c.Group("/testing")
-	RegisterAPI(router)
+	RegisterTransmissionAPI(router)
 	config.GRPCAddr = "localhost:1"
 
 	// Invalid download request - error method

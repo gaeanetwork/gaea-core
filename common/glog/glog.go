@@ -3,19 +3,28 @@ package glog
 import (
 	"time"
 
-	"github.com/gaeanetwork/gaea-core/common/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
+var (
+	// LogLevel log level, default is info
+	LogLevel = "info"
+)
+
 // MustGetLogger get a gaea logger
 func MustGetLogger() *zap.Logger {
-	logger, err := newZapConfig(NameToLevel(config.LogLevel)).Build()
+	logger, err := newZapConfig(NameToLevel(LogLevel)).Build()
 	if err != nil {
 		panic(err)
 	}
 
 	return logger
+}
+
+// MustGetLoggerWithNamed get a gaea named logger
+func MustGetLoggerWithNamed(name string) *zap.Logger {
+	return MustGetLogger().Named(name)
 }
 
 func newZapConfig(level zapcore.Level) zap.Config {

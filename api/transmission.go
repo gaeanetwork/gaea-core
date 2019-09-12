@@ -8,6 +8,7 @@ import (
 	"net/url"
 
 	"github.com/gaeanetwork/gaea-core/common/config"
+	"github.com/gaeanetwork/gaea-core/common/glog"
 	"github.com/gaeanetwork/gaea-core/protos/service"
 	"github.com/gaeanetwork/gaea-core/services"
 	"github.com/gaeanetwork/gaea-core/services/transmission"
@@ -15,10 +16,15 @@ import (
 	"google.golang.org/grpc"
 )
 
-// RegisterAPI register apis to gin server
-func RegisterAPI(rg *gin.RouterGroup) {
-	rg.POST("", uploadFile)
-	rg.GET("/:file_id", downloadFile)
+var (
+	logger = glog.MustGetLoggerWithNamed("api")
+)
+
+// RegisterTransmissionAPI register rransmission apis to gin server
+func RegisterTransmissionAPI(apiRG *gin.RouterGroup) {
+	filesRG := apiRG.Group("/files")
+	filesRG.POST("", uploadFile)
+	filesRG.GET("/:file_id", downloadFile)
 }
 
 /**
@@ -27,7 +33,7 @@ upload a file to server
 path: /files [POST]
 */
 func uploadFile(c *gin.Context) {
-	file, _, err := c.Request.FormFile("file")
+	file, header, err := c.Request.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -38,6 +44,7 @@ func uploadFile(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	logger.Sugar().Debugf("Received upload file request, filename: %s, data length: %d", header.Filename, data.Len())
 
 	var dialOpts []grpc.DialOption
 	dialOpts = append(dialOpts, grpc.WithInsecure())
@@ -59,6 +66,7 @@ func uploadFile(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	logger.Sugar().Debugf("Received upload file response: [%s]", resp.String())
 
 	c.JSON(http.StatusOK, gin.H{"file_id": resp.GetFileId()})
 }
@@ -76,6 +84,7 @@ func downloadFile(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": errmsg})
 		return
 	}
+	logger.Sugar().Debugf("Received download file request, fileID: %s", fileID)
 
 	conn, err := services.GetGRPCConnection()
 	if err != nil {
@@ -90,6 +99,7 @@ func downloadFile(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	logger.Sugar().Debugf("Received download file response, data length: %d", len(resp.Data))
 
 	returnFile(c, url.QueryEscape(fileID), resp.Data)
 }
@@ -97,6 +107,6 @@ func downloadFile(c *gin.Context) {
 func returnFile(c *gin.Context, filename string, fileData []byte) {
 	c.Header("Content-Disposition", "attachment; filename="+filename)
 	c.Header("Content-Type", "application/octet-stream")
-	c.Header("Accept-Length", fmt.Sprintf("%d", fileData))
+	c.Header("Accept-Length", fmt.Sprintf("%d", len(fileData)))
 	c.Writer.Write(fileData)
 }

@@ -3,13 +3,11 @@ package chaincode
 import (
 	"testing"
 
-	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/hyperledger/fabric/peer/common"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_Package(t *testing.T) {
-	config.Initialize()
 	ReadViperConfiguration()
 	conf, err := GetConfig("system01")
 	assert.NoError(t, err)
@@ -17,7 +15,6 @@ func Test_Package(t *testing.T) {
 
 	common.InitCmd(nil, []string{})
 	common.SetOrdererEnv(nil, []string{})
-	config.Initialize()
 
 	conf.ChaincodePath = "chaincode/system/user"
 	conf.ChaincodeName = "user"
