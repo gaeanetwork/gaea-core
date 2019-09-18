@@ -6,11 +6,24 @@ import (
 
 	"github.com/gaeanetwork/gaea-core/common"
 	"github.com/pkg/errors"
+	jww "github.com/spf13/jwalterweatherman"
 	"github.com/spf13/viper"
 )
 
+var (
+	configDir string
+)
+
+// GetConfigPath get config path
+func GetConfigPath() string {
+	return configDir
+}
+
 // InitConfig initialize fileName.yaml configuration into viper
 func InitConfig(v *viper.Viper, fileName string) error {
+	jww.SetLogThreshold(jww.LevelTrace)
+	jww.SetStdoutThreshold(jww.LevelInfo)
+
 	err := InitViper(v, fileName)
 	if err != nil {
 		return err
@@ -49,11 +62,6 @@ func InitViper(v *viper.Viper, configName string) error {
 		AddConfigPath(v, configDir)
 	} else {
 		// If we get here, we should use the default paths in priority order:
-		//
-		// *) CWD
-		// *) /etc/hyperledger/fabric
-
-		// CWD
 		AddConfigPath(v, CurrentPath)
 
 		// And finally, the official path

@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gaeanetwork/gaea-core/common/glog"
 	"github.com/gaeanetwork/gaea-core/protos/user"
 	"github.com/gaeanetwork/gaea-core/services"
 	"github.com/gin-gonic/gin"
@@ -11,13 +12,14 @@ import (
 
 var (
 	expireAfter = time.Hour
+	logger      = glog.MustGetLoggerWithNamed("api")
 )
 
 // RegisterAPI register to login related api to gin
-func RegisterAPI(auth *gin.RouterGroup) {
-	auth.POST("/register", Register)
-	auth.POST("/login", Login)
-	auth.POST("/logout", Login)
+func RegisterAPI(apiRG *gin.RouterGroup) {
+	apiRG.POST("/register", Register)
+	apiRG.POST("/login", Login)
+	apiRG.POST("/logout", Login)
 }
 
 // Register a x user
@@ -27,6 +29,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	logger.Sugar().Debugf("Received register request: [%s]", req.String())
 
 	conn, err := services.GetGRPCConnection()
 	if err != nil {
@@ -41,6 +44,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	logger.Sugar().Debugf("Received register response: [%s]", resp.String())
 
 	c.JSON(http.StatusOK, gin.H{"user": resp.User})
 }
@@ -52,6 +56,7 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	logger.Sugar().Debugf("Received login request: [%s]", req.String())
 
 	conn, err := services.GetGRPCConnection()
 	if err != nil {
@@ -66,6 +71,7 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	logger.Sugar().Debugf("Received login response: [%s]", req.String())
 
 	tokenString, err := SignJWTToken(resp.User.UserName, expireAfter)
 	if err != nil {
