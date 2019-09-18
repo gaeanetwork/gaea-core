@@ -78,3 +78,41 @@ func Test_VerifyECDSASignature(t *testing.T) {
 	err8 := VerifyECDSASignature(sigHex, pubHex, hashHex2)
 	assert.Contains(t, err8.Error(), "Failed to verify the signature")
 }
+
+func Test_JSVerify(t *testing.T) {
+	r := "19051712031440086694577267594196466496543509802038404869258494690838348448522"
+	s := "9967509273308981730382860329937234314009896559079928593052727688012859598829"
+	R, success := big.NewInt(0).SetString(r, 10)
+	if !success {
+		t.Fatal()
+	}
+	S, success := big.NewInt(0).SetString(s, 10)
+	if !success {
+		t.Fatal()
+	}
+	pubkey, err := FromPubHex("04441524e0cfbdabd031f61f162d82617899d3e6dd661594a8002864351592f2c5081bd0713b0d525dec61266fa78b7af27c4f06292512fc92c2eba77345b46ac3")
+	if err != nil {
+		panic(err)
+	}
+
+	msgHash := []byte{0, 1, 2, 3, 4,
+		5, 6, 7, 8, 9,
+		10}
+	assert.True(t, ecdsa.Verify(pubkey, msgHash, R, S))
+
+	d := "91082081033560243149400266323747403920535827661089212104563322716539035091"
+	D, success := big.NewInt(0).SetString(d, 10)
+	if !success {
+		t.Fatal()
+	}
+	privkey := &ecdsa.PrivateKey{
+		PublicKey: *pubkey,
+		D:         D,
+	}
+	R, S, err = ecdsa.Sign(rand.Reader, privkey, msgHash)
+	if err != nil {
+		panic(err)
+	}
+
+	assert.True(t, ecdsa.Verify(pubkey, msgHash, R, S))
+}
