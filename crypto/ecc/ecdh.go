@@ -34,6 +34,6 @@ func (ecdh *ECDH) GenerateSharedSecret(priv crypto.PrivateKey, pub crypto.Public
 
 	x, _ := publicKey.Curve.ScalarMult(publicKey.X, publicKey.Y, privateKey.D.Bytes())
 
-	sharedKey := sha256.Sum256(x.Bytes())
+	sharedKey := sha256.Sum256([]byte(x.String()))
 	return sharedKey[:], nil
 }

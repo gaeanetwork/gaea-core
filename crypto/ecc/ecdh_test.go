@@ -109,12 +109,12 @@ func Test_Android_ECDH(t *testing.T) {
 	ecdh := &ECDH{}
 	secretkey, err := ecdh.GenerateSharedSecret(priv, pubkey)
 	assert.NoError(t, err)
-	assert.Equal(t, "2c56244cf5e84a5f05aafc1fb87cd10690adaeaa3ccb637bc2d27b028011f2ec", hex.EncodeToString(secretkey))
+	assert.Equal(t, "c987c7fd47a40da41f8cf5c485b78c38a2052409e8fd6aeac185cbc02c9117f7", hex.EncodeToString(secretkey))
 
 	data := []byte("Hello World!")
 	ciphertext, err := crypto.AesEncrypt(data, secretkey)
 	assert.NoError(t, err)
-	assert.Equal(t, "39b105a7045acde8c623be343abbbcd7", hex.EncodeToString(ciphertext))
+	assert.Equal(t, "fb0a9a743252b042db5b918346fb0bdc", hex.EncodeToString(ciphertext))
 }
 
 func Test_SHA256(t *testing.T) {
@@ -146,7 +146,7 @@ func Test_JSECDH(t *testing.T) {
 	ecdh := &ECDH{}
 	secretkey, err := ecdh.GenerateSharedSecret(priv, pubkey)
 	assert.NoError(t, err)
-	assert.Equal(t, "cd3ae50c26656fa7c927c84c1dcbb736cd73c77d2b5b11f1d20b268bd3249fa5", hex.EncodeToString(secretkey))
+	assert.Equal(t, "a514b562b21ce3075148fbedbd6cc0ead9b33094488b701ca835a9ec3c9f81d8", hex.EncodeToString(secretkey))
 
 	// js private key
 	d := "d233a716bf371afc597636a9b00342603759ab9f39ab5954e6d51a996cd2bfdd"
@@ -162,7 +162,7 @@ func Test_JSECDH(t *testing.T) {
 	}
 	jsx, _ := pub.ScalarMult(pub.X, pub.Y, privkey.D.Bytes())
 	assert.Equal(t, "99629494961789099446600506511571181974131020151128428048581066925321839516601", jsx.String())
-	jssecretkey := sha256.Sum256(jsx.Bytes())
-	assert.Equal(t, "cd3ae50c26656fa7c927c84c1dcbb736cd73c77d2b5b11f1d20b268bd3249fa5", hex.EncodeToString(jssecretkey[:]))
+	jssecretkey := sha256.Sum256([]byte(jsx.String()))
+	assert.Equal(t, "a514b562b21ce3075148fbedbd6cc0ead9b33094488b701ca835a9ec3c9f81d8", hex.EncodeToString(jssecretkey[:]))
 
 }
