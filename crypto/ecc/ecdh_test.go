@@ -7,6 +7,7 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/hex"
+	"math/big"
 	"testing"
 
 	"github.com/gaeanetwork/gaea-core/crypto"
@@ -120,4 +121,48 @@ func Test_SHA256(t *testing.T) {
 	data := []byte("04be8ac2b0cc27d92b102b7fa25fc2d5aeb9ea5c4dfb88c74d4f8532c1ece317c8a47c6f7232f676c6c1ec46b8ab2a6687c7575b9892ae815a5f84248a946564f2")
 	hash := sha256.Sum256(data)
 	assert.Equal(t, "b088cf414cbab06fff85602bbc27a3e24c96a757ee29c78c48b9eaa198686a12", hex.EncodeToString(hash[:]))
+}
+
+func Test_JSECDH(t *testing.T) {
+	jsPubKey := "0495d820c781208cdd0389ea0d54cdbe1b64c0d91e9541816c55608057e5be07a81cb46eea388ee05a30107fd512705301b8e6b0d83284d54d1babb63aafc879b4"
+	pubBytes, err := hex.DecodeString(jsPubKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	x, y := elliptic.Unmarshal(elliptic.P256(), pubBytes)
+	pubkey := &ecdsa.PublicKey{Curve: elliptic.P256(), X: x, Y: y}
+
+	privBytes, err := hex.DecodeString(privHexForTests)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	priv, err := FromPrivBytes(privBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ecdh := &ECDH{}
+	secretkey, err := ecdh.GenerateSharedSecret(priv, pubkey)
+	assert.NoError(t, err)
+	assert.Equal(t, "cd3ae50c26656fa7c927c84c1dcbb736cd73c77d2b5b11f1d20b268bd3249fa5", hex.EncodeToString(secretkey))
+
+	// js private key
+	d := "d233a716bf371afc597636a9b00342603759ab9f39ab5954e6d51a996cd2bfdd"
+	b, _ := hex.DecodeString(d)
+	D := big.NewInt(0).SetBytes(b)
+	privkey := &ecdsa.PrivateKey{
+		PublicKey: *pubkey,
+		D:         D,
+	}
+	pub, err := FromPubHex(pubHexForTests)
+	if err != nil {
+		panic(err)
+	}
+	jsx, _ := pub.ScalarMult(pub.X, pub.Y, privkey.D.Bytes())
+	assert.Equal(t, "99629494961789099446600506511571181974131020151128428048581066925321839516601", jsx.String())
+	jssecretkey := sha256.Sum256(jsx.Bytes())
+	assert.Equal(t, "cd3ae50c26656fa7c927c84c1dcbb736cd73c77d2b5b11f1d20b268bd3249fa5", hex.EncodeToString(jssecretkey[:]))
+
 }
