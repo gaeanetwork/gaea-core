@@ -4,16 +4,17 @@ import (
 	"context"
 	"log"
 	"net/http"
-
-	//
-	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	//
+	_ "net/http/pprof"
+
 	"github.com/gaeanetwork/gaea-core/api"
 	"github.com/gaeanetwork/gaea-core/api/auth"
+	"github.com/gaeanetwork/gaea-core/api/tee"
 	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -50,6 +51,9 @@ func setupRouter() *gin.Engine {
 		// user module
 		api.RegisterTransmissionAPI(apiRG) // Transmission api register
 		auth.RegisterAPI(apiRG)            // Register / Login / Logout
+
+		// tee data share module
+		tee.RegisterSharedDataAPI(apiRG)
 	}
 	return r
 }

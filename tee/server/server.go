@@ -5,7 +5,7 @@ import (
 
 	"github.com/gaeanetwork/gaea-core/common/config"
 	"github.com/gaeanetwork/gaea-core/protos/service"
-	"github.com/gaeanetwork/gaea-core/services/shareddata"
+	"github.com/gaeanetwork/gaea-core/services/tee"
 	"github.com/gaeanetwork/gaea-core/services/transmission"
 	"github.com/gaeanetwork/gaea-core/services/user"
 	"github.com/pkg/errors"
@@ -29,7 +29,9 @@ func NewTeeServer(address string) *TeeServer {
 
 	grpcServer := grpc.NewServer(serverOpts...)
 	service.RegisterTransmissionServer(grpcServer, transmission.NewTransmissionService())
-	service.RegisterSharedDataServer(grpcServer, shareddata.NewSharedDataService())
+
+	// tee data share models
+	service.RegisterSharedDataServer(grpcServer, tee.NewSharedDataService())
 
 	// user models to register and login
 	user.RegisterUserServiceIntoGRPCServer(grpcServer)

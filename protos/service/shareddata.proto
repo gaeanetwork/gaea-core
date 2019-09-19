@@ -22,16 +22,11 @@ service SharedData {
 // @Param	signatures		formData 	[]string	false	"Signature of the data summary by the user's private key."
 
 message UploadRequest {
-    Content content = 1;
-    string hash = 2;
-    SignatureGroup signature = 3;
-}
-
-message Content {
     string data = 1;
     string hash = 2;
     string description = 3;
     string owner = 4;
+    SignatureGroup signatures = 5;
 }
 
 message UploadResponse {
@@ -39,5 +34,5 @@ message UploadResponse {
 }
 
 message SignatureGroup{
-    repeated string signature = 3;
+    repeated string signature = 1;
 }
