@@ -18,7 +18,7 @@ var (
 	owner              = sha256.Sum256([]byte("buddingleader"))
 	sharedDataForTests = &tee.SharedData{
 		Id:          "data_id",
-		Ciphertext:  "data",
+		Data:        "data",
 		Hash:        "dataHash",
 		Description: "I'm a good boy.",
 		Owner:       hex.EncodeToString(owner[:]),
@@ -38,6 +38,7 @@ func Test_Upload(t *testing.T) {
 
 	uploadResp, err := sdService.Upload(nil, uploadReq)
 	assert.NoError(t, err)
+	assert.Equal(t, sharedDataForTests.Id, uploadResp.Data.Id)
 	assert.Equal(t, sharedDataForTests.Hash, uploadResp.Data.Hash)
 	assert.Equal(t, sharedDataForTests.Description, uploadResp.Data.Description)
 	assert.Equal(t, sharedDataForTests.Owner, uploadResp.Data.Owner)
