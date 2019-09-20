@@ -42,7 +42,6 @@ func init() {
 
 // Load the gaea.yaml
 func Load() {
-	log.Println("==============config.load==============")
 	gaeaViper = viper.New()
 	if err := InitConfig(gaeaViper, configFileName); err != nil {
 		log.Printf("Failed to initial %s.yaml, err: %v\n", configFileName, err)

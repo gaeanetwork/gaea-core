@@ -1,7 +1,6 @@
 package glog
 
 import (
-	"log"
 	"time"
 
 	"go.uber.org/zap"
@@ -25,7 +24,6 @@ func MustGetLogger() *zap.Logger {
 
 // MustGetLoggerWithNamed get a gaea named logger
 func MustGetLoggerWithNamed(name string) *zap.Logger {
-	log.Println("==============" + name + "==============")
 	return MustGetLogger().Named(name)
 }
 
