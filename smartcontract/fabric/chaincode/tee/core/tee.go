@@ -101,7 +101,7 @@ func upload(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 		Owner:                  args[3],
 		Signatures:             sigs,
 		CreateSecondsTimestamp: timestamp.Seconds,
-		UploadSecondsTimestamp: timestamp.Seconds,
+		UpdateSecondsTimestamp: timestamp.Seconds,
 	}
 
 	if len(sigs) > 0 && sigs[0] != "" {
@@ -173,7 +173,7 @@ func update(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	data.Ciphertext = ciphertext
 	data.Hash = hash
 	data.Description = description
-	data.UploadSecondsTimestamp = timestamp.Seconds
+	data.UpdateSecondsTimestamp = timestamp.Seconds
 	if bs, err = json.Marshal(data); err != nil {
 		return shim.Error("Error marshaling shard data: " + err.Error())
 	}

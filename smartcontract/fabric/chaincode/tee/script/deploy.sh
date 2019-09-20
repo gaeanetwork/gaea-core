@@ -7,9 +7,11 @@ docker ps -a | awk '{print $1}'| xargs docker rm
 docker images | grep tee | awk '{print $3}'| xargs docker rmi
 
 ## create and join channel
-# CORE_PEER_MSPCONFIGPATH=crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp ./peer channel join -b ./syschannel.block -o orderer.rabbit.com:7050
-./script/channelcreate.sh
-./script/channelwork.sh
+echo "Create syschannel"
+CORE_PEER_MSPCONFIGPATH=crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp ./peer channel create -c syschannel -f syschannel.tx -o orderer.rabbit.com:7050
+echo "Join syschannel"
+CORE_PEER_MSPCONFIGPATH=crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp ./peer channel join -b ./syschannel.block -o orderer.rabbit.com:7050
+
 
 ## rabbit_02
 echo "Install rabbit_02 chaincode"

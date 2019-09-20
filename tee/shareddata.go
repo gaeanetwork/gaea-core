@@ -15,7 +15,7 @@ type SharedData struct {
 	Description            string   `json:"description" form:"description"`
 	Owner                  string   `json:"owner" form:"owner"`
 	CreateSecondsTimestamp int64    `json:"create_seconds"`
-	UploadSecondsTimestamp int64    `json:"upload_seconds"`
+	UpdateSecondsTimestamp int64    `json:"update_seconds"`
 	Signatures             []string `json:"signatures" form:"signatures"`
 }
 

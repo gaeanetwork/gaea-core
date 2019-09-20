@@ -8,10 +8,10 @@ import (
 )
 
 func Test_Initialize(t *testing.T) {
-	ProfileEnabled, glog.LogLevel = true, "debug"
+	ProfileEnabled, glog.LogLevel = true, "info"
 	assert.True(t, ProfileEnabled)
-	assert.Equal(t, glog.LogLevel, "debug")
-	initialize()
-	assert.False(t, ProfileEnabled)
 	assert.Equal(t, glog.LogLevel, "info")
+	Load()
+	assert.False(t, ProfileEnabled)
+	assert.Equal(t, glog.LogLevel, "debug")
 }
