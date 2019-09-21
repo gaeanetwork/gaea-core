@@ -1,6 +1,8 @@
 package config
 
 import (
+	"log"
+
 	"github.com/gaeanetwork/gaea-core/common/glog"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -34,22 +36,22 @@ var (
 	logger    *zap.Logger
 )
 
-// Initialize the gaea.yaml
 func init() {
-	initialize()
-
-	logger = glog.MustGetLoggerWithNamed("common")
-	logger.With(zap.String("logger level", glog.LogLevel)).Info("Configuration initialization succeeded")
-	logger.Sugar().Debugf("print gaea viper: %v", gaeaViper)
+	Load()
 }
 
-func initialize() {
+// Load the gaea.yaml
+func Load() {
 	gaeaViper = viper.New()
 	if err := InitConfig(gaeaViper, configFileName); err != nil {
-		logger.Sugar().Panicf("Failed to initial %s.yaml, err: %v", configFileName, err)
+		log.Printf("Failed to initial %s.yaml, err: %v\n", configFileName, err)
 	}
 
 	readConfigConfiguration(gaeaViper)
+	log.Println("Configuration initialization succeeded, log level:", glog.LogLevel)
+
+	logger = glog.MustGetLoggerWithNamed("common")
+	logger.Sugar().Debugf("print gaea viper: %v", gaeaViper)
 }
 
 func readConfigConfiguration(viper *viper.Viper) {

@@ -24,6 +24,18 @@ package main
 	./peer chaincode query -C syschannel -n tee_data -c '{"Args":["queryHistoryByDID","10fe8cc74ca2cf2d4dacf9233885bdc40c643a4c64aa1411c10ec4cb93c312a5"]}' -o orderer.rabbit.com:7050
 
 	./peer chaincode invoke -C syschannel -n tee_data -c '{"Args":["queryDataByOwner","Owner"]}' -o orderer.rabbit.com:7050
+
+
+	============================ Error Notes ================================
+	Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode registration failed: container exited with 2
+		When the chain code is upgraded, an error is reported. When restarting the peer, it is found that it cannot be started.
+		It is a config.go file referenced in my chain code. This file has an init function that loads a yaml configuration file
+		in the same directory. When the chain code of the fabric is packaged and installed into the docker, the non-go file will
+		not be loaded. Therefore, when the file is found during instantiation, the panic is reported incorrectly. Since the
+		fabric fails to start the docker container, the docker container is automatically deleted. Therefore, the error that
+		should have	been printed is killed by the fabric, so the error is caused. Keep in mind: all chain codes must be written
+		in pure go files, without any non-go dependencies, such as c files, yml files, etc., otherwise the error will be
+		reported incorrectly, and the reason can not be found! ! !
 */
 
 import (
@@ -108,7 +120,7 @@ func dataIsOk(t *testing.T, data tee.SharedData) {
 	assert.Equal(t, "Description", data.Description)
 	assert.Equal(t, "Owner", data.Owner)
 	assert.NotNil(t, data.ID)
-	assert.NotZero(t, data.UploadSecondsTimestamp)
+	assert.NotZero(t, data.UpdateSecondsTimestamp)
 }
 
 func Test_Invoke_update(t *testing.T) {
@@ -193,7 +205,7 @@ func Test_Invoke_queryDataByID(t *testing.T) {
 	assert.Equal(t, "Description", data.Description)
 	assert.Equal(t, "Owner", data.Owner)
 	assert.NotNil(t, data.ID)
-	assert.NotZero(t, data.UploadSecondsTimestamp)
+	assert.NotZero(t, data.UpdateSecondsTimestamp)
 }
 
 func queryNotExistIDError(t *testing.T, stub *shim.MockStub) {

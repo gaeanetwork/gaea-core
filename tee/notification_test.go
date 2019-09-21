@@ -5,6 +5,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/gaeanetwork/gaea-core/smartcontract"
 	"github.com/gaeanetwork/gaea-core/smartcontract/factory"
 	"github.com/gaeanetwork/gaea-core/tee"
 	"github.com/gaeanetwork/gaea-core/tee/mock"
@@ -13,9 +14,9 @@ import (
 
 func Test_GetNotification(t *testing.T) {
 	// Service not initialized error
-	factory.DeleteSmartContractService(&mock.TeeChaincodeService{})
+	factory.DeleteSmartContractService(smartcontract.Fabric)
 	_, err := tee.GetNotification("data_id")
-	assert.Contains(t, err.Error(), "failed to get smart contract service")
+	assert.Contains(t, err.Error(), "failed to get")
 
 	// Query error
 	queryErr := errors.New("failed to query")

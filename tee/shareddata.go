@@ -10,12 +10,12 @@ import (
 // SharedData user uploads shared data information
 type SharedData struct {
 	ID                     string   `json:"id"`
-	Ciphertext             string   `json:"ciphertext" form:"ciphertext"`
-	Hash                   string   `json:"summary" form:"summary"`
+	Ciphertext             string   `json:"data" form:"data"`
+	Hash                   string   `json:"hash" form:"hash"`
 	Description            string   `json:"description" form:"description"`
 	Owner                  string   `json:"owner" form:"owner"`
-	CreateSecondsTimestamp int64    `json:"createSeconds"`
-	UploadSecondsTimestamp int64    `json:"uploadSeconds"`
+	CreateSecondsTimestamp int64    `json:"create_seconds"`
+	UpdateSecondsTimestamp int64    `json:"update_seconds"`
 	Signatures             []string `json:"signatures" form:"signatures"`
 }
 
